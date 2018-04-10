@@ -38,7 +38,11 @@ dependencies {
     compile 'com.google.android.gms:play-services-places:12.0.0'
 
     // google gson --------------------------------------------------------------------------------
-    compile 'com.google.code.gson:gson:2.8.1'
+    compile 'com.google.code.gson:gson:2.8.2'
+
+    // retrofit -----------------------------------------------------------------------------------
+    compile 'com.squareup.retrofit2:retrofit:2.4.0'
+    compile 'com.squareup.retrofit2:converter-gson:latest.version'
 
     // third party dependencies -------------------------------------------------------------------
     compile 'com.balysv:material-ripple:1.0.2'                  // ripple effect
