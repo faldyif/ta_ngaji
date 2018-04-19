@@ -37,8 +37,9 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:12.0.0'
     compile 'com.google.android.gms:play-services-places:12.0.0'
 
-    // google gson --------------------------------------------------------------------------------
-    compile 'com.google.code.gson:gson:2.8.1'
+    // retrofit -----------------------------------------------------------------------------------
+    compile 'com.squareup.retrofit2:retrofit:2.4.0'
+    compile 'com.squareup.retrofit2:converter-moshi:2.4.0'
 
     // butterknife --------------------------------------------------------------------------------
     compile 'com.jakewharton:butterknife:8.8.1'
@@ -52,4 +53,12 @@ dependencies {
     compile 'com.github.pchmn:MaterialChipsInput:1.0.5'         // material chip
     compile 'com.hootsuite.android:nachos:1.1.1'                // material chips
     compile 'com.google.android:flexbox:0.3.2'                  // google flexible box
+    implementation 'com.basgeekball:awesome-validation:4.1'     // validation service
+
+    // debugging tools ----------------------------------------------------------------------------
+    compile 'com.facebook.stetho:stetho:1.5.0'                  // facebook stetho (chrome debugging)
+    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'          // facebook stetho okhttp
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'          // memory leak detection
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 }
