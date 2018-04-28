@@ -16,5 +16,9 @@ public interface ApiService {
 
     @POST("register")
     @FormUrlEncoded
-    Call<RegisterResponse> register(@Field("name") String name, @Field("email") String email, @Field("password") String password, @Field("gender") Character gender);
+    Call<RegisterResponse> register(@Field("name") String name, @Field("email") String email, @Field("password") String password, @Field("gender") Character gender, @Field("whatsapp_number") String whatsappNumber);
+
+    @POST("login")
+    @FormUrlEncoded
+    Call<AccessToken> login(@Field("username") String username, @Field("password") String password);
 }

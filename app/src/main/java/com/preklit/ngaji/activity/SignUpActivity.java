@@ -49,6 +49,8 @@ public class SignUpActivity extends AppCompatActivity {
     TextInputLayout tilName;
     @BindView(R.id.til_email)
     TextInputLayout tilEmail;
+    @BindView(R.id.til_wa)
+    TextInputLayout tilWA;
     @BindView(R.id.til_password)
     TextInputLayout tilPassword;
     @BindView(R.id.radio_male)
@@ -110,10 +112,18 @@ public class SignUpActivity extends AppCompatActivity {
         String name = tilName.getEditText().getText().toString();
         String email = tilEmail.getEditText().getText().toString();
         String password = tilPassword.getEditText().getText().toString();
+        String waNumber = tilWA.getEditText().getText().toString();
         Character gender = null;
 
         Boolean isMaleChecked = radioMale.isChecked();
         Boolean isFemaleChecked = radioFemale.isChecked();
+
+        // Add prefix +62 in front of whatsapp number
+        if(waNumber.equals(null) || waNumber.equals("")) {
+            waNumber = "";
+        } else {
+            waNumber = "+62" + waNumber;
+        }
 
         if(isFemaleChecked) {
             gender = 'F';
@@ -127,6 +137,7 @@ public class SignUpActivity extends AppCompatActivity {
         tilName.setError(null);
         tilEmail.setError(null);
         tilPassword.setError(null);
+        tilWA.setError(null);
         radioFemale.setError(null);
 
         // Check validation
@@ -145,7 +156,7 @@ public class SignUpActivity extends AppCompatActivity {
             progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
             progress.show();
 
-            call = service.register(name, email, password, gender);
+            call = service.register(name, email, password, gender, waNumber);
             call.enqueue(new Callback<RegisterResponse>() {
                 @Override
                 public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
@@ -189,6 +200,9 @@ public class SignUpActivity extends AppCompatActivity {
                 tilPassword.setError(error.getValue().get(0));
             }
             if(error.getKey().equals("gender")) {
+                radioFemale.setError(error.getValue().get(0));
+            }
+            if(error.getKey().equals("whatsapp_number")) {
                 radioFemale.setError(error.getValue().get(0));
             }
         }

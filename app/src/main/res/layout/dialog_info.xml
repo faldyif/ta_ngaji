@@ -67,7 +67,7 @@
             android:background="@drawable/btn_rounded_green"
             android:paddingLeft="@dimen/spacing_mlarge"
             android:paddingRight="@dimen/spacing_mlarge"
-            android:text="Get Started"
+            android:text="Menu Utama"
             android:textColor="@android:color/white" />
 
     </LinearLayout>

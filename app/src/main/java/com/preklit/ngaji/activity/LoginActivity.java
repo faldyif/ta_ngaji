@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,19 +13,31 @@ import android.widget.ProgressBar;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.utils.Tools;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class LoginActivity extends AppCompatActivity {
 
-    private ProgressBar progress_bar;
-    private FloatingActionButton fab;
+    @BindView(R.id.til_username)
+    TextInputLayout tilUsername;
+    @BindView(R.id.til_password)
+    TextInputLayout tilPassword;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+
     private View parent_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // Bind butterknife
+        ButterKnife.bind(this);
+
         parent_view = findViewById(android.R.id.content);
-        progress_bar = (ProgressBar) findViewById(R.id.progress_bar);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
 
         Tools.setSystemBarColor(this, R.color.cyan_800);
 
@@ -47,13 +60,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void searchAction() {
-        progress_bar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         fab.setAlpha(0f);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                progress_bar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
                 fab.setAlpha(1f);
 //                Snackbar.make(parent_view, "Login data submitted", Snackbar.LENGTH_SHORT).show();
                 login();
