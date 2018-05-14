@@ -21,6 +21,23 @@
         <item>@drawable/image_15</item>
     </integer-array>
 
+
+    <string-array name="sample_masjid_array">
+        <item>Masjid Al-Ashri</item>
+        <item>Masjid Al-Quds</item>
+        <item>Masjid Pogung Lor</item>
+        <item>Masjid Pogung Dalangan</item>
+        <item>Masjid Pogung Raya</item>
+        <item>Masjid Jogokariyan</item>
+        <item>Masjid Kampus UGM</item>
+    </string-array>
+
+    <string-array name="sample_event_type">
+        <item>Tahsin</item>
+        <item>Tahfidz</item>
+        <item>Tahsin &amp; Tahfidz</item>
+    </string-array>
+
     <string-array name="sample_images_name">
         <item>Night Street</item>
         <item>Architect Desk</item>

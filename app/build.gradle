@@ -54,11 +54,14 @@ dependencies {
     compile 'com.hootsuite.android:nachos:1.1.1'                // material chips
     compile 'com.google.android:flexbox:0.3.2'                  // google flexible box
     implementation 'com.basgeekball:awesome-validation:4.1'     // validation service
+    compile 'com.google.code.gson:gson:2.8.4'                   // gson for debugging
 
     // debugging tools ----------------------------------------------------------------------------
-    compile 'com.facebook.stetho:stetho:1.5.0'                  // facebook stetho (chrome debugging)
+    compile 'com.facebook.stetho:stetho:1.5.0'
+    // facebook stetho (chrome debugging)
     compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'          // facebook stetho okhttp
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'          // memory leak detection
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    // memory leak detection
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 }

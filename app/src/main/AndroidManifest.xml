@@ -21,7 +21,11 @@
         </activity>
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.SignUpActivity" />
-        <activity android:name=".activity.IntroActivity"></activity>
+        <activity android:name=".activity.IntroActivity" />
+        <activity
+            android:name=".activity.JadwalGuruActivity"
+            android:label="@string/title_activity_jadwal_guru"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

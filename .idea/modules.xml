@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Android.iml" filepath="$PROJECT_DIR$/Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ta_ngaji.iml" filepath="$PROJECT_DIR$/ta_ngaji.iml" />
       <module fileurl="file://C:\Development\Project\Ngaji\Android\ta_ngaji.iml" filepath="C:\Development\Project\Ngaji\Android\ta_ngaji.iml" />
     </modules>
   </component>
