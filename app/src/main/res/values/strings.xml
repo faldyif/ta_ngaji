@@ -17,6 +17,12 @@
     <string name="err_email">Isian email harus berupa alamat surel yang valid.</string>
     <string name="err_password">Isian password harus minimal 6 karakter.</string>
     <string name="err_gender">Bidang isian jenis kelamin wajib diisi.</string>
+
+    <string name="err_study_place">Bidang isian tempat belajar wajib diisi.</string>
+    <string name="err_study_date">Bidang isian tanggal belajar wajib diisi.</string>
+    <string name="err_study_time">Bidang isian waktu belajar wajib diisi.</string>
+
+
     <string name="title_activity_jadwal_guru">JadwalGuruActivity</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>

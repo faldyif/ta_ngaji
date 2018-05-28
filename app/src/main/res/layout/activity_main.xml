@@ -138,6 +138,9 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:drawableLeft="@drawable/ic_medal"
+                            android:drawableTint="@color/medal_bronze"
+                            android:drawablePadding="2dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
@@ -353,7 +356,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Menu Santri"
+                            android:text="Cari Ustadz"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                             android:textColor="@color/grey_60" />
 
@@ -380,7 +383,7 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:id="@+id/menu_riwayat"
+                            android:id="@+id/menu_tahsin"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -395,20 +398,20 @@
                                 app:elevation="0dp"
                                 app:fabSize="mini"
                                 app:rippleColor="@android:color/white"
-                                app:srcCompat="@drawable/ic_history" />
+                                app:srcCompat="@drawable/ic_message_bulleted" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/spacing_medium"
-                                android:text="RIWAYAT"
+                                android:text="TAHSIN"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textColor="@color/grey_40" />
 
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/menu_jadwal"
+                            android:id="@+id/menu_tahfidz"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -423,19 +426,19 @@
                                 app:elevation="0dp"
                                 app:fabSize="mini"
                                 app:rippleColor="@android:color/white"
-                                app:srcCompat="@drawable/ic_event" />
+                                app:srcCompat="@drawable/ic_bookmark" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/spacing_medium"
-                                android:text="JADWAL"
+                                android:text="TAHFIDZ"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textColor="@color/grey_40" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/menu_payment"
+                            android:id="@+id/menu_tadabbur"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -450,13 +453,13 @@
                                 app:elevation="0dp"
                                 app:fabSize="mini"
                                 app:rippleColor="@android:color/white"
-                                app:srcCompat="@drawable/ic_credit_card" />
+                                app:srcCompat="@drawable/ic_book_open_page_variant" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/spacing_medium"
-                                android:text="NGAJIPAY"
+                                android:text="TADABBUR"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textColor="@color/grey_40" />
                         </LinearLayout>
@@ -468,24 +471,6 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:orientation="vertical">
-
-                            <android.support.design.widget.FloatingActionButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:tint="@android:color/white"
-                                app:backgroundTint="@color/light_green_400"
-                                app:elevation="0dp"
-                                app:fabSize="mini"
-                                app:rippleColor="@android:color/white"
-                                app:srcCompat="@drawable/ic_star" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_medium"
-                                android:text="NGAJIPOINT"
-                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                                android:textColor="@color/grey_40" />
                         </LinearLayout>
 
                     </LinearLayout>

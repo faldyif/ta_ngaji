@@ -12,6 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDu1q9fZGVVkU0_s2Yevmp7yfJtQYJIS8k"/>
+
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +30,8 @@
         <activity
             android:name=".activity.JadwalGuruActivity"
             android:label="@string/title_activity_jadwal_guru"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activity.TeacherSearchActivity"></activity>
     </application>
 
 </manifest>

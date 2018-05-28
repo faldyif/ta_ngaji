@@ -333,5 +333,9 @@
         <item type="color">#607d8b</item>
         <item type="color">#ff9800</item>
     </array>
+    
+    <color name="medal_bronze">#8C7853</color>
+    <color name="medal_silver">#E6E8FA</color>
+    <color name="medal_gold">#CFB53B</color>
 
 </resources>

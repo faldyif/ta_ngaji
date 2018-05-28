@@ -55,4 +55,24 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, JadwalGuruActivity.class);
         startActivity(intent);
     }
+
+    @OnClick(R.id.menu_tahsin)
+    void clickMenuTahsin() {
+        openTeacherSearchActivity();
+    }
+
+    @OnClick(R.id.menu_tahfidz)
+    void clickMenuTahfidz() {
+        openTeacherSearchActivity();
+    }
+
+    @OnClick(R.id.menu_tadabbur)
+    void clickMenuTadabbur() {
+        openTeacherSearchActivity();
+    }
+
+    void openTeacherSearchActivity() {
+        Intent intent = new Intent(MainActivity.this, TeacherSearchActivity.class);
+        startActivity(intent);
+    }
 }
