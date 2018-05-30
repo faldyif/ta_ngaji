@@ -55,6 +55,7 @@ dependencies {
     compile 'com.google.android:flexbox:0.3.2'                  // google flexible box
     implementation 'com.basgeekball:awesome-validation:4.1'     // validation service
     compile 'com.google.code.gson:gson:2.8.4'                   // gson for debugging
+    implementation 'com.squareup.picasso:picasso:2.71828'       // picasso
 
     // debugging tools ----------------------------------------------------------------------------
     compile 'com.facebook.stetho:stetho:1.5.0'

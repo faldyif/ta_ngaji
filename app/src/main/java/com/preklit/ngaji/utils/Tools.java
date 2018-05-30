@@ -1,5 +1,6 @@
 package com.preklit.ngaji.utils;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -106,6 +107,21 @@ public class Tools {
         }
     }
 
+
+    public static void displayImageRoundFromUrl(final Context ctx, final ImageView img, String imageUrl) {
+        try {
+            Glide.with(ctx).load(imageUrl).asBitmap().centerCrop().into(new BitmapImageViewTarget(img) {
+                @Override
+                protected void setResource(Bitmap resource) {
+                    RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(ctx.getResources(), resource);
+                    circularBitmapDrawable.setCircular(true);
+                    img.setImageDrawable(circularBitmapDrawable);
+                }
+            });
+        } catch (Exception e) {
+        }
+    }
+
     public static void displayImageOriginal(Context ctx, ImageView img, String url) {
         try {
             Glide.with(ctx).load(url)
@@ -114,6 +130,34 @@ public class Tools {
                     .into(img);
         } catch (Exception e) {
         }
+    }
+
+    public static String convertDateToDateTimeMySQL(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(date);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static Drawable getDrawableTeacherRank(Context context, Integer level) {
+        int imgSrc = R.drawable.ic_medal;
+        Drawable img = context.getResources().getDrawable(imgSrc);
+        img.setBounds( 0, 0, 60, 60);
+
+        switch (level) {
+            case 1:
+                img.setTint(context.getResources().getColor(R.color.medal_bronze));
+                break;
+            case 2:
+                img.setTint(context.getResources().getColor(R.color.medal_silver));
+                break;
+            case 3:
+                img.setTint(context.getResources().getColor(R.color.medal_gold));
+                break;
+            default:
+                break;
+        }
+
+        return img;
     }
 
     public static String getFormattedDateSimple(Long dateTime) {

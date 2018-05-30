@@ -19,6 +19,8 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.gson.Gson;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.utils.Tools;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -27,6 +29,7 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +48,9 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
     public static String durationString;
     public static Integer studyDuration;
     int[] durationIntegerArray;
+    private LatLngBounds latLngBounds;
+    private double longitude;
+    private double latitude;
 
     @BindView(R.id.tv_date_study)
     TextView textViewDateStudy;
@@ -61,6 +67,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
         setContentView(R.layout.activity_teacher_search);
         parent_view = findViewById(android.R.id.content);
         ButterKnife.bind(this);
+        studyDuration = 15;
 
         durationIntegerArray = getResources().getIntArray(R.array.duration_integer_array);
         initToolbar();
@@ -157,6 +164,9 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 choosenPlace = PlacePicker.getPlace(this, data);
+                latLngBounds = PlacePicker.getLatLngBounds(data);
+                latitude = latLngBounds.getCenter().latitude;
+                longitude = latLngBounds.getCenter().longitude;
                 ((TextView) findViewById(R.id.tv_destination)).setText(choosenPlace.getName());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
@@ -199,6 +209,23 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
 
         if(validated) {
             Toast.makeText(this, "Validasi berhasil!", Toast.LENGTH_SHORT).show();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(choosenDateMillis);
+            calendar.add(Calendar.HOUR_OF_DAY, choosenHour);
+            calendar.add(Calendar.MINUTE, choosenMinute);
+            Date dateStart = calendar.getTime();
+            calendar.add(Calendar.MINUTE, studyDuration);
+            Date dateEnd = calendar.getTime();
+            Gson gson = new Gson();
+
+            Intent intent = new Intent(TeacherSearchActivity.this, ListTeacherFreeTimeActivity.class);
+            intent.putExtra("start_time", gson.toJson(dateStart));
+            intent.putExtra("end_time", gson.toJson(dateEnd));
+            intent.putExtra("latitude", latitude);
+            intent.putExtra("longitude", longitude);
+            intent.putExtra("event_type", "tahsin");
+            startActivity(intent);
         }
     }
 
@@ -209,7 +236,6 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.preklit.ngaji.network;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.preklit.ngaji.BuildConfig;
+import com.preklit.ngaji.TokenManager;
 
 import java.io.IOException;
 
@@ -18,7 +19,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 
 public class RetrofitBuilder {
 
-    private static final String BASE_URL = "http://218ce96d.ngrok.io/api/";
+    private static final String BASE_URL = "http://192.168.43.238:8000/api/";
+    public static final String apiVersion = "v1";
 
     private static OkHttpClient client = buildClient();
     private static Retrofit retrofit = buildRetrofit(client);
@@ -58,6 +60,29 @@ public class RetrofitBuilder {
 
     public static <T> T createService(Class<T> service) {
         return retrofit.create(service);
+    }
+
+    public static <T> T createServiceWithAuth(Class<T> service, final TokenManager tokenManager){
+
+        OkHttpClient newClient = client.newBuilder().addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+
+                Request request = chain.request();
+
+                Request.Builder builder = request.newBuilder();
+
+                if(tokenManager.getToken().getAccessToken() != null){
+                    builder.addHeader("Authorization", "Bearer " + tokenManager.getToken().getAccessToken());
+                }
+                request = builder.build();
+                return chain.proceed(request);
+            }
+        }).authenticator(CustomAuthenticator.getInstance(tokenManager)).build();
+
+        Retrofit newRetrofit = retrofit.newBuilder().client(newClient).build();
+        return newRetrofit.create(service);
+
     }
 
     public static Retrofit getRetrofit() {
