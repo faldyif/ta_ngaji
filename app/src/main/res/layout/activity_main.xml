@@ -29,7 +29,7 @@
             app:subtitle="selamat datang di Ngaji"
             app:subtitleTextAppearance="@style/Base.TextAppearance.AppCompat.Caption"
             app:subtitleTextColor="@color/grey_10"
-            app:title="Halo, Faldy Ikhwan Fadila" />
+            app:title="Halo, Kamu siapa?" />
 
     </RelativeLayout>
 

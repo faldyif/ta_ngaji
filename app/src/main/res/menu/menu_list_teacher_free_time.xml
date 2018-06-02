@@ -8,11 +8,11 @@
         android:title="Refresh"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_mode"
-        android:icon="@drawable/ic_view_stream"
-        android:orderInCategory="100"
-        android:title="Refresh"
-        app:showAsAction="always" />
+    <!--<item-->
+        <!--android:id="@+id/action_mode"-->
+        <!--android:icon="@drawable/ic_view_stream"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="Refresh"-->
+        <!--app:showAsAction="always" />-->
 
 </menu>

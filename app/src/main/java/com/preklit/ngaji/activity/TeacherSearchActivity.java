@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,6 +29,7 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -51,6 +53,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
     private LatLngBounds latLngBounds;
     private double longitude;
     private double latitude;
+    private String type;
 
     @BindView(R.id.tv_date_study)
     TextView textViewDateStudy;
@@ -68,6 +71,8 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
         parent_view = findViewById(android.R.id.content);
         ButterKnife.bind(this);
         studyDuration = 15;
+        Intent intent = getIntent();
+        type = intent.getStringExtra("ngaji_type");
 
         durationIntegerArray = getResources().getIntArray(R.array.duration_integer_array);
         initToolbar();
@@ -82,6 +87,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         Tools.setSystemBarColor(this, R.color.grey_90);
+        textViewDestination.setHint("Tempat belajar " + type);
     }
 
     private void initComponent() {
@@ -115,6 +121,13 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
      */
     private void dialogDatePickerLight() {
         Calendar cur_calender = Calendar.getInstance();
+        Calendar today_plus_one = Calendar.getInstance();
+        today_plus_one.add(Calendar.DAY_OF_MONTH, 1);
+
+        if(choosenDateMillis != null) {
+            cur_calender.setTimeInMillis(choosenDateMillis);
+        }
+
         DatePickerDialog datePicker = DatePickerDialog.newInstance(
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -123,6 +136,9 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
                         calendar.set(Calendar.YEAR, year);
                         calendar.set(Calendar.MONTH, monthOfYear);
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(Calendar.HOUR, 0);
+                        calendar.set(Calendar.MINUTE, 0);
+                        calendar.set(Calendar.SECOND, 0);
                         choosenDateMillis = calendar.getTimeInMillis();
                         textViewDateStudy.setText(Tools.getFormattedDateSimple(choosenDateMillis));
                     }
@@ -134,7 +150,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
         //set dark light
         datePicker.setThemeDark(false);
         datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
-        datePicker.setMinDate(cur_calender);
+        datePicker.setMinDate(today_plus_one);
         datePicker.show(getFragmentManager(), "Datepickerdialog");
     }
 
@@ -142,20 +158,36 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
      * Dialog for time picker
      */
     private void dialogTimePickerLight() {
-        Calendar cur_calender = Calendar.getInstance();
-        TimePickerDialog datePicker = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                choosenHour = hourOfDay;
-                choosenMinute = minute;
-                NumberFormat f = new DecimalFormat("00");
-                textViewTimeStudy.setText(f.format(choosenHour) + " : " + f.format(choosenMinute));
-            }
-        }, cur_calender.get(Calendar.HOUR_OF_DAY), cur_calender.get(Calendar.MINUTE), true);
-        //set dark light
-        datePicker.setThemeDark(false);
-        datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
-        datePicker.show(getFragmentManager(), "Timepickerdialog");
+        if(choosenHour == null && choosenMinute == null) {
+            Calendar cur_calender = Calendar.getInstance();
+            TimePickerDialog datePicker = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                    choosenHour = hourOfDay;
+                    choosenMinute = minute;
+                    NumberFormat f = new DecimalFormat("00");
+                    textViewTimeStudy.setText(f.format(choosenHour) + " : " + f.format(choosenMinute));
+                }
+            }, cur_calender.get(Calendar.HOUR_OF_DAY), cur_calender.get(Calendar.MINUTE), true);
+            //set dark light
+            datePicker.setThemeDark(false);
+            datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
+            datePicker.show(getFragmentManager(), "Timepickerdialog");
+        } else {
+            TimePickerDialog datePicker = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                    choosenHour = hourOfDay;
+                    choosenMinute = minute;
+                    NumberFormat f = new DecimalFormat("00");
+                    textViewTimeStudy.setText(f.format(choosenHour) + " : " + f.format(choosenMinute));
+                }
+            }, choosenHour, choosenMinute, true);
+            //set dark light
+            datePicker.setThemeDark(false);
+            datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
+            datePicker.show(getFragmentManager(), "Timepickerdialog");
+        }
     }
 
     @Override
@@ -192,7 +224,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
 
     @OnClick(R.id.bt_search)
     void searchTeacher() {
-        Toast.makeText(this, textViewDateStudy.getText(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, textViewDateStudy.getText(), Toast.LENGTH_SHORT).show();
         submitSearch();
     }
 
@@ -208,7 +240,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
         if(choosenHour == null) textViewTimeStudy.setError("Bidang isian waktu belajar wajib diisi.");
 
         if(validated) {
-            Toast.makeText(this, "Validasi berhasil!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Validasi berhasil!", Toast.LENGTH_SHORT).show();
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(choosenDateMillis);
@@ -224,7 +256,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
             intent.putExtra("end_time", gson.toJson(dateEnd));
             intent.putExtra("latitude", latitude);
             intent.putExtra("longitude", longitude);
-            intent.putExtra("event_type", "tahsin");
+            intent.putExtra("event_type", type);
             startActivity(intent);
         }
     }

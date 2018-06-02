@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.preklit.ngaji.R;
@@ -27,6 +28,7 @@ import com.preklit.ngaji.utils.ItemAnimation;
 import com.preklit.ngaji.utils.Tools;
 import com.preklit.ngaji.utils.ViewAnimation;
 import com.preklit.ngaji.widget.LineItemDecoration;
+import com.preklit.ngaji.widget.RecyclerViewEmptySupport;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,13 +44,14 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
     private View parent_view;
 
     private static final String TAG = ListTeacherFreeTimeActivity.class.getSimpleName();
-    private RecyclerView recyclerView;
+    private RecyclerViewEmptySupport recyclerView;
     private AdapterListTeacherFreeTime mAdapter;
     private List<TeacherFreeTime> items = new ArrayList<>();
     private int animation_type = ItemAnimation.BOTTOM_UP;
     private Call<TeacherFreeTimeResponse> call;
     private TokenManager tokenManager;
     private ApiService service;
+    private RelativeLayout noItem;
 
     private double latitude;
     private double longitude;
@@ -89,14 +92,17 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_menu);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Animation");
+        getSupportActionBar().setTitle("Daftar Guru");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initComponent() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        noItem = (RelativeLayout) findViewById(R.id.no_result);
+        noItem.setVisibility(View.GONE);
+
+        recyclerView = (RecyclerViewEmptySupport) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new LineItemDecoration(this, LinearLayout.VERTICAL));
@@ -123,6 +129,11 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View view, TeacherFreeTime obj, int position) {
                 Snackbar.make(parent_view, "Item " + obj.getTeacher().getName() + " clicked", Snackbar.LENGTH_SHORT).show();
+                Intent intent = new Intent(ListTeacherFreeTimeActivity.this, DetailTeacherFreeTimeActivity.class);
+                intent.putExtra("free_time_details", gson.toJson(obj));
+                intent.putExtra("latitude_choosen", latitude);
+                intent.putExtra("longitude_choosen", longitude);
+                startActivity(intent);
             }
         });
     }
@@ -141,11 +152,12 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.action_refresh:
-                setAdapter();
+                items = new ArrayList<>();
+                getTeacherFreeTimeData();
                 break;
-            case R.id.action_mode:
-                showSingleChoiceDialog();
-                break;
+//            case R.id.action_mode:
+//                showSingleChoiceDialog();
+//                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -154,30 +166,30 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
             "Bottom Up", "Fade In", "Left to Right", "Right to Left"
     };
 
-    private void showSingleChoiceDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Animation Type");
-        builder.setCancelable(false);
-        builder.setSingleChoiceItems(ANIMATION_TYPE, -1, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                String selected = ANIMATION_TYPE[i];
-                if (selected.equalsIgnoreCase("Bottom Up")) {
-                    animation_type = ItemAnimation.BOTTOM_UP;
-                } else if (selected.equalsIgnoreCase("Fade In")) {
-                    animation_type = ItemAnimation.FADE_IN;
-                } else if (selected.equalsIgnoreCase("Left to Right")) {
-                    animation_type = ItemAnimation.LEFT_RIGHT;
-                } else if (selected.equalsIgnoreCase("Right to Left")) {
-                    animation_type = ItemAnimation.RIGHT_LEFT;
-                }
-                getSupportActionBar().setTitle(selected);
-                setAdapter();
-                dialogInterface.dismiss();
-            }
-        });
-        builder.show();
-    }
+//    private void showSingleChoiceDialog() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Animation Type");
+//        builder.setCancelable(false);
+//        builder.setSingleChoiceItems(ANIMATION_TYPE, -1, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                String selected = ANIMATION_TYPE[i];
+//                if (selected.equalsIgnoreCase("Bottom Up")) {
+//                    animation_type = ItemAnimation.BOTTOM_UP;
+//                } else if (selected.equalsIgnoreCase("Fade In")) {
+//                    animation_type = ItemAnimation.FADE_IN;
+//                } else if (selected.equalsIgnoreCase("Left to Right")) {
+//                    animation_type = ItemAnimation.LEFT_RIGHT;
+//                } else if (selected.equalsIgnoreCase("Right to Left")) {
+//                    animation_type = ItemAnimation.RIGHT_LEFT;
+//                }
+//                getSupportActionBar().setTitle(selected);
+//                setAdapter();
+//                dialogInterface.dismiss();
+//            }
+//        });
+//        builder.show();
+//    }
 
     void getTeacherFreeTimeData(){
         final LinearLayout lyt_progress = (LinearLayout) findViewById(R.id.lyt_progress);
@@ -197,6 +209,10 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
                     items = response.body().getData();
                     Log.w(TAG, "onResponse: " + new Gson().toJson(items));
                     setAdapter();
+
+                    if(items.size() == 0) {
+                        ViewAnimation.fadeIn(noItem);
+                    }
                 }else {
                     tokenManager.deleteToken();
                     startActivity(new Intent(ListTeacherFreeTimeActivity.this, LoginActivity.class));

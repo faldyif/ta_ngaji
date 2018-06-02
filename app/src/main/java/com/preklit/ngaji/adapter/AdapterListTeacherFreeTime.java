@@ -105,7 +105,13 @@ public class AdapterListTeacherFreeTime extends RecyclerView.Adapter<RecyclerVie
             view.name.setCompoundDrawables(Tools.getDrawableTeacherRank(ctx, p.getTeacherRank()), null, null, null);
             view.name.setCompoundDrawablePadding(5);
             view.distance.setText(jarak);
+
             view.points.setText(p.getPoints() + " point");
+            if(p.getPoints() < 0) {
+                view.points.setTextColor(ctx.getResources().getColor(R.color.red_400));
+            } else {
+                view.points.setTextColor(ctx.getResources().getColor(R.color.green_400));
+            }
             Tools.displayImageRoundFromUrl(ctx, view.image, p.getTeacher().getProfilePicUrl());
 
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {

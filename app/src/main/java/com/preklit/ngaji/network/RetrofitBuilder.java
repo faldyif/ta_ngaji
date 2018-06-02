@@ -1,5 +1,7 @@
 package com.preklit.ngaji.network;
 
+import android.util.Log;
+
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.preklit.ngaji.BuildConfig;
 import com.preklit.ngaji.TokenManager;
@@ -19,7 +21,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 
 public class RetrofitBuilder {
 
-    private static final String BASE_URL = "http://192.168.43.238:8000/api/";
+    private static final String BASE_URL = "http://10.33.85.251:8000/api/";
     public static final String apiVersion = "v1";
 
     private static OkHttpClient client = buildClient();
@@ -71,6 +73,7 @@ public class RetrofitBuilder {
                 Request request = chain.request();
 
                 Request.Builder builder = request.newBuilder();
+                Log.w("testes", "intercept: " + tokenManager.getToken().getAccessToken());
 
                 if(tokenManager.getToken().getAccessToken() != null){
                     builder.addHeader("Authorization", "Bearer " + tokenManager.getToken().getAccessToken());

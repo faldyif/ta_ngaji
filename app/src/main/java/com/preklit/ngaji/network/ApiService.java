@@ -2,6 +2,7 @@ package com.preklit.ngaji.network;
 
 import com.preklit.ngaji.entities.AccessToken;
 import com.preklit.ngaji.entities.RegisterResponse;
+import com.preklit.ngaji.entities.SelfUserDetail;
 import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
 
 import retrofit2.Call;
@@ -32,5 +33,8 @@ public interface ApiService {
 
     @GET("v1/finder/events/filter")
     Call<TeacherFreeTimeResponse> listEvents(@Query("latitude") Double latitude, @Query("longitude") Double longitude, @Query("time_start") String timeStart, @Query("time_end") String timeEnd, @Query("event_type") String eventType);
+
+    @GET("v1/profile")
+    Call<SelfUserDetail> refreshSelfUserDetail();
 
 }

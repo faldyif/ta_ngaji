@@ -59,8 +59,9 @@
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="People Name"
+                    android:text="People Namessssfdjdkfdkfj fdsafasasfdafdasf"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:maxLength="30"
                     android:textColor="@color/grey_90"
                     android:textStyle="bold" />
 
@@ -97,6 +98,7 @@
                 android:layout_alignParentEnd="true"
                 android:maxLines="1"
                 android:singleLine="true"
+                android:paddingTop="35dp"
                 android:text="50 points"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/grey_90"

@@ -11,12 +11,18 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.preklit.ngaji.R;
+import com.preklit.ngaji.TokenManager;
 import com.preklit.ngaji.utils.Tools;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    TokenManager tokenManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,21 +64,22 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.menu_tahsin)
     void clickMenuTahsin() {
-        openTeacherSearchActivity();
+        openTeacherSearchActivity("tahsin");
     }
 
     @OnClick(R.id.menu_tahfidz)
     void clickMenuTahfidz() {
-        openTeacherSearchActivity();
+        openTeacherSearchActivity("tahfidz");
     }
 
     @OnClick(R.id.menu_tadabbur)
     void clickMenuTadabbur() {
-        openTeacherSearchActivity();
+        openTeacherSearchActivity("tadabbur");
     }
 
-    void openTeacherSearchActivity() {
+    void openTeacherSearchActivity(String ngajiType) {
         Intent intent = new Intent(MainActivity.this, TeacherSearchActivity.class);
+        intent.putExtra("ngaji_type", ngajiType);
         startActivity(intent);
     }
 }
