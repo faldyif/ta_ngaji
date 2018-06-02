@@ -8,21 +8,39 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.TokenManager;
+import com.preklit.ngaji.UserManager;
+import com.preklit.ngaji.entities.SelfUserDetail;
+import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
+import com.preklit.ngaji.network.ApiService;
+import com.preklit.ngaji.network.RetrofitBuilder;
 import com.preklit.ngaji.utils.Tools;
+import com.preklit.ngaji.utils.ViewAnimation;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    TokenManager tokenManager;
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    private Call<SelfUserDetail> call;
+    private TokenManager tokenManager;
+    private UserManager userManager;
+    private ApiService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +49,21 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+
         initToolbar();
+
+        userManager = UserManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if(userManager.getUserDetail() == null) {
+            getSelfUserData();
+        } else {
+            toolbar.setTitle("Halo, " + userManager.getUserDetail().getName());
+        }
     }
 
     private void initToolbar() {
@@ -50,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+        } else if (item.getItemId() == R.id.action_logout) {
+            logOut();
         } else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }
@@ -81,5 +115,38 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, TeacherSearchActivity.class);
         intent.putExtra("ngaji_type", ngajiType);
         startActivity(intent);
+    }
+
+    void getSelfUserData(){
+        call = service.refreshSelfUserDetail();
+        call.enqueue(new Callback<SelfUserDetail>() {
+            @Override
+            public void onResponse(Call<SelfUserDetail> call, Response<SelfUserDetail> response) {
+                Log.w(TAG, "onResponse: " + response );
+
+                if(response.isSuccessful()){
+                    Log.w(TAG, "onResponse: " + response.body());
+                    userManager.saveUser(response.body());
+                    toolbar.setTitle("Halo, " + userManager.getUserDetail().getName());
+                }else {
+                    Toast.makeText(MainActivity.this, "Kok gagal", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SelfUserDetail> call, Throwable t) {
+                Log.w(TAG, "onFailure: " + t.getMessage() );
+            }
+        });
+
+    }
+
+    void logOut() {
+        tokenManager.deleteToken();
+        userManager.deleteUser();
+
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
