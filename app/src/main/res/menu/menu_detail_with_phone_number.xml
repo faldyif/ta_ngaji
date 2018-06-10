@@ -1,0 +1,33 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_whatsapp"
+        android:icon="@drawable/ic_whatsapp"
+        android:iconTint="@color/mdtp_white"
+        android:orderInCategory="100"
+        android:title="Refresh"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_sms"
+        android:icon="@drawable/ic_message_bulleted"
+        android:iconTint="@color/mdtp_white"
+        android:orderInCategory="100"
+        android:title="SMS"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_call"
+        android:icon="@drawable/ic_phone"
+        android:orderInCategory="100"
+        android:title="Telepon"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_report"
+        android:orderInCategory="100"
+        android:title="Laporkan"
+        app:showAsAction="never" />
+
+</menu>

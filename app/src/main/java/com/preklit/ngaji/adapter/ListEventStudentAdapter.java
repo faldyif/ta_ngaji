@@ -1,49 +1,46 @@
 package com.preklit.ngaji.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.balysv.materialripple.MaterialRippleLayout;
 import com.preklit.ngaji.R;
-import com.preklit.ngaji.entities.TeacherFreeTime;
+import com.preklit.ngaji.entities.Event;
 import com.preklit.ngaji.utils.ItemAnimation;
 import com.preklit.ngaji.utils.Tools;
-import com.squareup.picasso.Picasso;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
- * Created by faldyikhwanfadila on 29/05/18.
+ * Created by faldyikhwanfadila on 05/06/18.
  */
 
-public class AdapterListTeacherFreeTime extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ListEventStudentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<TeacherFreeTime> items = new ArrayList<>();
+    private List<Event> items = new ArrayList<>();
 
     private Context ctx;
-    private OnItemClickListener mOnItemClickListener;
+    private ListEventStudentAdapter.OnItemClickListener mOnItemClickListener;
     private int animation_type = 0;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, TeacherFreeTime obj, int position);
+        void onItemClick(View view, Event obj, int position);
     }
 
-    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
+    public void setOnItemClickListener(final ListEventStudentAdapter.OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public AdapterListTeacherFreeTime(Context context, List<TeacherFreeTime> items, int animation_type) {
+    public ListEventStudentAdapter(Context context, List<Event> items, int animation_type) {
         this.items = items;
         ctx = context;
         this.animation_type = animation_type;
@@ -52,27 +49,29 @@ public class AdapterListTeacherFreeTime extends RecyclerView.Adapter<RecyclerVie
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
         public ImageView image;
         public TextView name;
-        public TextView distance;
-        public TextView points;
+        public TextView time_info;
+        public TextView date_info;
+        public TextView status;
         public View lyt_parent;
-        public AppCompatRatingBar ratingBar;
+        public MaterialRippleLayout parentLayout;
 
         public OriginalViewHolder(View v) {
             super(v);
             image = (ImageView) v.findViewById(R.id.image);
             name = (TextView) v.findViewById(R.id.name);
-            distance = (TextView) v.findViewById(R.id.distance);
-            points = (TextView) v.findViewById(R.id.points);
+            time_info = (TextView) v.findViewById(R.id.time_info);
+            date_info = (TextView) v.findViewById(R.id.date_info);
+            status = (TextView) v.findViewById(R.id.status);
             lyt_parent = (View) v.findViewById(R.id.lyt_parent);
-            ratingBar = (AppCompatRatingBar) v.findViewById(R.id.rating);
+            parentLayout = (MaterialRippleLayout) v.findViewById(R.id.parent_layout);
         }
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh;
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_teacher_free_time, parent, false);
-        vh = new OriginalViewHolder(v);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_student_event, parent, false);
+        vh = new ListEventStudentAdapter.OriginalViewHolder(v);
         return vh;
     }
 
@@ -80,39 +79,34 @@ public class AdapterListTeacherFreeTime extends RecyclerView.Adapter<RecyclerVie
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         Log.e("onBindViewHolder", "onBindViewHolder : " + position);
-        if (holder instanceof OriginalViewHolder) {
-            OriginalViewHolder view = (OriginalViewHolder) holder;
+        if (holder instanceof ListEventStudentAdapter.OriginalViewHolder) {
+            ListEventStudentAdapter.OriginalViewHolder view = (ListEventStudentAdapter.OriginalViewHolder) holder;
 
-            TeacherFreeTime p = items.get(position);
-            String jarak = "";
+            Event p = items.get(position);
 
-            Locale currentLocale = new Locale("in", "ID");
-            NumberFormat numberFormatter = NumberFormat.getNumberInstance(currentLocale);
-            String pattern = "###,###.##";
-            DecimalFormat decimalFormatter = (DecimalFormat) numberFormatter; // The one from above
-            decimalFormatter.applyPattern(pattern);
-
-            if(p.getDistance() < 1) {
-                String formattedValue = decimalFormatter.format(p.getDistance() * 1000);
-                jarak = formattedValue + " m";
-            } else {
-                String formattedValue = decimalFormatter.format(p.getDistance());
-                jarak = formattedValue + " km";
-            }
-            jarak += " dari lokasi anda";
+            // Set name
             view.name.setText(p.getTeacher().getName());
-
             view.name.setCompoundDrawables(Tools.getDrawableTeacherRank(ctx, p.getTeacherRank()), null, null, null);
             view.name.setCompoundDrawablePadding(5);
-            view.distance.setText(jarak);
-
-            view.points.setText(p.getPoints() + " point");
-            if(p.getPoints() < 0) {
-                view.points.setTextColor(ctx.getResources().getColor(R.color.red_400));
-            } else {
-                view.points.setTextColor(ctx.getResources().getColor(R.color.green_400));
-            }
+            // Set image
             Tools.displayImageRoundFromUrl(ctx, view.image, p.getTeacher().getProfilePicUrl());
+            // Set status
+            view.status.setText(p.getStatus().toUpperCase());
+            // Set time info
+            Date dateStart = Tools.convertDateTimeMySQLStringToJavaDate(p.getStartTime());
+            Date dateEnd = Tools.convertDateTimeMySQLStringToJavaDate(p.getEndTime());
+            SimpleDateFormat sdfDate = new SimpleDateFormat("EEEE, dd MMMM yyyy");
+            SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
+
+            view.time_info.setText(sdfTime.format(dateStart) + " - " + sdfTime.format(dateEnd));
+            view.date_info.setText(sdfDate.format(dateStart));
+
+            // Colorify teacher ranks
+            if(p.getTeacherRank() == 3) {
+                view.parentLayout.setBackgroundColor(ctx.getResources().getColor(R.color.medal_gold));
+            } else if (p.getTeacherRank() == 2) {
+                view.parentLayout.setBackgroundColor(ctx.getResources().getColor(R.color.medal_silver));
+            }
 
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override

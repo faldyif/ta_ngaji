@@ -7,10 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +16,11 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.preklit.ngaji.R;
-import com.preklit.ngaji.adapter.AdapterListJadwal;
+import com.preklit.ngaji.adapter.ListJadwalAdapter;
 import com.preklit.ngaji.data.DataGenerator;
 import com.preklit.ngaji.entities.DateSection;
 import com.preklit.ngaji.entities.Event;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +31,7 @@ public class ListJadwalAvailableFragment extends Fragment {
     private static final String TAG = ListJadwalAvailableFragment.class.getSimpleName();
     
     private RecyclerView recyclerView;
-    private AdapterListJadwal mAdapter;
+    private ListJadwalAdapter mAdapter;
     private Context context;
     private View parent_view;
 
@@ -91,11 +88,11 @@ public class ListJadwalAvailableFragment extends Fragment {
         }
 
         //set data and list adapter
-        mAdapter = new AdapterListJadwal(context, items);
+        mAdapter = new ListJadwalAdapter(context, items);
         recyclerView.setAdapter(mAdapter);
 
         // on item list clicked
-        mAdapter.setOnItemClickListener(new AdapterListJadwal.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new ListJadwalAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, Object obj, int position) {
                 if(obj instanceof Event) {

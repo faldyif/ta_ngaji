@@ -42,7 +42,11 @@
         <activity android:name=".activity.DetailTeacherFreeTimeActivity" />
         <activity
             android:name=".activity.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".activity.ListEventForStudentActivity"
+            android:label="@string/title_activity_list_event_for_student"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,8 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
     TextView textViewDestination;
     @BindView(R.id.tv_time_study)
     TextView textViewTimeStudy;
+    @BindView(R.id.et_detail_destination)
+    EditText etLocationDetails;
     @BindView(R.id.spinner_duration_study)
     Spinner spinnerDurationStudy;
 
@@ -257,6 +260,9 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
             intent.putExtra("latitude", latitude);
             intent.putExtra("longitude", longitude);
             intent.putExtra("event_type", type);
+            intent.putExtra("location_details", "" + etLocationDetails.getText());
+
+            Log.w(TAG, "onCreate: " + etLocationDetails.getText());
             startActivity(intent);
         }
     }

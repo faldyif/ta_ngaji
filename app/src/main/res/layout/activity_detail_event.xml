@@ -88,6 +88,13 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
                 android:textColor="@color/grey_90" />
 
+            <TextView
+                android:id="@+id/whatsapp_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+62XXXXXXXXX"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/grey_90" />
 
             <android.support.v7.widget.AppCompatRatingBar
                 style="@style/Yellow.Small.AppCompatRatingBar"
@@ -99,6 +106,21 @@
                 android:rating="4.5"
                 android:stepSize="0.5"
                 android:theme="@style/Yellow.Small.AppCompatRatingBar" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/spacing_large" />
+
+            <TextView
+                android:id="@+id/status"
+                android:drawableLeft="@drawable/ic_check_circle"
+                android:drawableTint="@color/green_600"
+                android:drawablePadding="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jadwal Telah Disetujui"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/green_600"/>
 
             <View
                 android:layout_width="0dp"
@@ -133,14 +155,14 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/grey_90"/>
 
+
             <TextView
                 android:id="@+id/time_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-"
+                android:text="XX:XX - XX:XX"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/grey_90"/>
-
 
             <View
                 android:layout_width="0dp"
@@ -173,26 +195,41 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/spacing_medium" />
 
-            <Button
-                android:id="@+id/btn_accept"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:text="JADWALKAN"
-                android:theme="@style/Button.Accent" />
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="Batalkan"
+                    android:theme="@style/Button.Accent" />
+
+                <Button
+                    android:id="@+id/btn_change_request"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="Ajukan Penggantian"
+                    android:theme="@style/Button.Accent" />
+
+            </LinearLayout>
 
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="@dimen/spacing_xlarge" />
 
-            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/map_fragment"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                tools:context="com.preklit.ngaji.activity.MapsActivity" />
+            <!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"-->
+                <!--xmlns:tools="http://schemas.android.com/tools"-->
+                <!--android:id="@+id/map_fragment"-->
+                <!--android:name="com.google.android.gms.maps.SupportMapFragment"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="500dp"-->
+                <!--tools:context="com.preklit.ngaji.activity.MapsActivity" />-->
 
         </LinearLayout>
 

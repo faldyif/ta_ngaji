@@ -1,6 +1,9 @@
 package com.preklit.ngaji.network;
 
 import com.preklit.ngaji.entities.AccessToken;
+import com.preklit.ngaji.entities.CreateResponse;
+import com.preklit.ngaji.entities.Event;
+import com.preklit.ngaji.entities.EventsResponse;
 import com.preklit.ngaji.entities.RegisterResponse;
 import com.preklit.ngaji.entities.SelfUserDetail;
 import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
@@ -31,10 +34,20 @@ public interface ApiService {
     @FormUrlEncoded
     Call<AccessToken> refresh(@Field("refresh_token") String refreshToken);
 
+    // Find teacher free time
     @GET("v1/finder/events/filter")
     Call<TeacherFreeTimeResponse> listEvents(@Query("latitude") Double latitude, @Query("longitude") Double longitude, @Query("time_start") String timeStart, @Query("time_end") String timeEnd, @Query("event_type") String eventType);
 
+    // Get current user profile
     @GET("v1/profile")
     Call<SelfUserDetail> refreshSelfUserDetail();
+
+    // Create event request
+    @POST("v1/events")
+    @FormUrlEncoded
+    Call<CreateResponse> createEvent(@Field("latitude") Double latitude, @Field("longitude") Double longitude, @Field("time_start") String timeStart, @Field("time_end") String timeEnd, @Field("event_type") String eventType, @Field("teacher_free_time_id") String teacherFreeTimeId, @Field("location_details") String locationDetails);
+
+    @GET("v1/events")
+    Call<EventsResponse> listStudentEvent(@Query("active") Integer active);
 
 }

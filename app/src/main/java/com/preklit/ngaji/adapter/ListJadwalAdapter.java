@@ -7,14 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.entities.DateSection;
 import com.preklit.ngaji.entities.Event;
-import com.preklit.ngaji.utils.Tools;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,9 +22,9 @@ import java.util.List;
  * Created by faldyikhwanfadila on 30/04/18.
  */
 
-public class AdapterListJadwal extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ListJadwalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final String TAG = AdapterListJadwal.class.getSimpleName();
+    private static final String TAG = ListJadwalAdapter.class.getSimpleName();
     
     private final int VIEW_ITEM = 1;
     private final int VIEW_SECTION = 0;
@@ -43,12 +41,12 @@ public class AdapterListJadwal extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public AdapterListJadwal(Context context, List<Object> items) {
+    public ListJadwalAdapter(Context context, List<Object> items) {
         this.items = items;
         ctx = context;
 
         Gson gson = new Gson();
-        Log.d(TAG, "GsonDEBUG AdapterListJadwal: " + gson.toJson(items));
+        Log.d(TAG, "GsonDEBUG ListJadwalAdapter: " + gson.toJson(items));
     }
 
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
@@ -102,22 +100,16 @@ public class AdapterListJadwal extends RecyclerView.Adapter<RecyclerView.ViewHol
             OriginalViewHolder view = (OriginalViewHolder) holder;
 
             String jenis = "";
-            if(p.getEventType() == 1) {
-                jenis = "Tahsin";
-            } else if(p.getEventType() == 2) {
-                jenis = "Tahfidz";
-            } else if(p.getEventType() == 3) {
-                jenis = "Tahsin & Tahfidz";
-            } else {
-                jenis = "Tadabbur";
-            }
+            jenis = p.getEventType();
 
             @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
             view.textViewTitle.setText(jenis);
             view.textViewLocation.setText(p.getShortPlaceName());
-            view.textViewStartTime.setText(sdf.format(p.getStartTime()) + " ~");
-            view.textViewEndTime.setText(sdf.format(p.getEndTime()));
+//            view.textViewStartTime.setText(sdf.format(p.getStartTime()) + " ~");
+//            view.textViewEndTime.setText(sdf.format(p.getEndTime()));
+            view.textViewStartTime.setText(p.getStartTime() + " ~");
+            view.textViewEndTime.setText(p.getEndTime());
 
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override

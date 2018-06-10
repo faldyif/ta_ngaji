@@ -41,10 +41,12 @@ public class DataGenerator {
             Date startDate = new Date(System.currentTimeMillis() + 3600 * 1000 + (i * 3600 * 1000));
             Date endDate = new Date(System.currentTimeMillis() + 3600 * 1000 + 3600 * 1000 + (i * 3600 * 1000));
 
-            obj.setEventType(rand.nextInt(3)+1);
+            obj.setEventType("tahsin");
             obj.setShortPlaceName(getRandomArray(masjid_names));
-            obj.setStartTime(startDate);
-            obj.setEndTime(endDate);
+            obj.setStartTime("fdsa");
+            obj.setEndTime("asdf");
+//            obj.setStartTime(startDate);
+//            obj.setEndTime(endDate);
 
             items.add(obj);
         }

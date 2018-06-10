@@ -53,6 +53,7 @@ import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
 import com.preklit.ngaji.network.ApiService;
 import com.preklit.ngaji.network.RetrofitBuilder;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -164,6 +165,20 @@ public class Tools {
         return sdf.format(date);
     }
 
+    public static Date convertDateTimeMySQLStringToJavaDate(String date) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        java.sql.Date sqlDate = null;
+
+        try {
+            java.util.Date utilDate = format.parse(date);
+            sqlDate = new java.sql.Date(utilDate.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return sqlDate;
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static Drawable getDrawableTeacherRank(Context context, Integer level) {
         int imgSrc = R.drawable.ic_medal;
@@ -172,10 +187,10 @@ public class Tools {
                 imgSrc = R.drawable.ic_medal_bronze;
                 break;
             case 2:
-                imgSrc = R.drawable.ic_medal_silver;
+                imgSrc = R.drawable.ic_medal;
                 break;
             case 3:
-                imgSrc = R.drawable.ic_medal_gold;
+                imgSrc = R.drawable.ic_medal;
                 break;
             default:
                 break;

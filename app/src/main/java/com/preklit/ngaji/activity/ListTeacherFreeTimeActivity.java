@@ -1,13 +1,10 @@
 package com.preklit.ngaji.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -19,7 +16,7 @@ import android.widget.RelativeLayout;
 import com.google.gson.Gson;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.TokenManager;
-import com.preklit.ngaji.adapter.AdapterListTeacherFreeTime;
+import com.preklit.ngaji.adapter.ListTeacherFreeTimeAdapter;
 import com.preklit.ngaji.entities.TeacherFreeTime;
 import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
 import com.preklit.ngaji.network.ApiService;
@@ -30,7 +27,6 @@ import com.preklit.ngaji.utils.ViewAnimation;
 import com.preklit.ngaji.widget.LineItemDecoration;
 import com.preklit.ngaji.widget.RecyclerViewEmptySupport;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +41,7 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
 
     private static final String TAG = ListTeacherFreeTimeActivity.class.getSimpleName();
     private RecyclerViewEmptySupport recyclerView;
-    private AdapterListTeacherFreeTime mAdapter;
+    private ListTeacherFreeTimeAdapter mAdapter;
     private List<TeacherFreeTime> items = new ArrayList<>();
     private int animation_type = ItemAnimation.BOTTOM_UP;
     private Call<TeacherFreeTimeResponse> call;
@@ -59,6 +55,7 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
     private Date dateEnd;
     private String eventType;
     private Gson gson;
+    private Intent myIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +66,8 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
         gson = new Gson();
 
         // Get values from previous intent
-        Intent myIntent = getIntent();
+        myIntent = getIntent();
+        Log.w(TAG, "onCreate: " + myIntent.getStringExtra("location_details"));
         latitude = myIntent.getDoubleExtra("latitude", 0);
         longitude = myIntent.getDoubleExtra("longitude", 0);
         dateStart = gson.fromJson(myIntent.getStringExtra("start_time"), Date.class);
@@ -121,11 +119,11 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
 
     private void setAdapter() {
         //set data and list adapter
-        mAdapter = new AdapterListTeacherFreeTime(this, items, animation_type);
+        mAdapter = new ListTeacherFreeTimeAdapter(this, items, animation_type);
         recyclerView.setAdapter(mAdapter);
 
         // on item list clicked
-        mAdapter.setOnItemClickListener(new AdapterListTeacherFreeTime.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new ListTeacherFreeTimeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, TeacherFreeTime obj, int position) {
                 Snackbar.make(parent_view, "Item " + obj.getTeacher().getName() + " clicked", Snackbar.LENGTH_SHORT).show();
@@ -133,6 +131,10 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
                 intent.putExtra("free_time_details", gson.toJson(obj));
                 intent.putExtra("latitude_choosen", latitude);
                 intent.putExtra("longitude_choosen", longitude);
+                intent.putExtra("event_type", eventType);
+                intent.putExtra("time_start", myIntent.getStringExtra("start_time"));
+                intent.putExtra("time_end", myIntent.getStringExtra("end_time"));
+                intent.putExtra("location_details", myIntent.getStringExtra("location_details"));
                 startActivity(intent);
             }
         });

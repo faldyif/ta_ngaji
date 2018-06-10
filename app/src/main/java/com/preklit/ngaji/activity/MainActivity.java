@@ -117,6 +117,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @OnClick(R.id.menu_santri_jadwal)
+    void openMenuSantriJadwal() {
+        Intent intent = new Intent(MainActivity.this, ListEventForStudentActivity.class);
+        startActivity(intent);
+    }
+
     void getSelfUserData(){
         call = service.refreshSelfUserDetail();
         call.enqueue(new Callback<SelfUserDetail>() {

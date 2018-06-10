@@ -6,6 +6,13 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
+    <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"/>
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -79,6 +86,20 @@
                     android:minHeight="@dimen/spacing_xmlarge"
                     android:singleLine="true"
                     android:hint="Tempat Belajar Tahsin"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="@color/grey_80" />
+
+                <EditText
+                    android:id="@+id/et_detail_destination"
+                    android:nextFocusUp="@id/et_detail_destination"
+                    android:nextFocusLeft="@id/et_detail_destination"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:gravity="center_vertical"
+                    android:maxLines="3"
+                    android:minHeight="@dimen/spacing_xmlarge"
+                    android:hint="Keterangan Lokasi"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/grey_80" />
 
