@@ -44,9 +44,10 @@
             android:name=".activity.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
+            android:configChanges="orientation|screenSize"
             android:name=".activity.ListEventForStudentActivity"
-            android:label="@string/title_activity_list_event_for_student"
-            android:theme="@style/AppTheme"></activity>
+            android:label="@string/title_activity_list_event_for_student" />
+        <activity android:name=".activity.DetailEventStudentActivity" />
     </application>
 
 </manifest>

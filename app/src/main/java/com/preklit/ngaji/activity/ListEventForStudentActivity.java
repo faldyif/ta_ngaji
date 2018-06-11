@@ -105,16 +105,18 @@ public class ListEventForStudentActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return ListEventStudentFragment.newInstance(ctx, true);
+                return ListEventStudentFragment.newInstance(ctx, "pending");
+            } else if(position == 1) {
+                return ListEventStudentFragment.newInstance(ctx, "accepted");
             } else {
-                return ListEventStudentFragment.newInstance(ctx, false);
+                return ListEventStudentFragment.newInstance(ctx, "rejected");
             }
         }
 
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
+            return 3;
         }
     }
 }

@@ -21,7 +21,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 
 public class RetrofitBuilder {
 
-    private static final String BASE_URL = "http://10.33.65.139:8000/api/";
+    private static final String BASE_URL = "http://10.33.72.129:8000/api/";
     public static final String apiVersion = "v1";
 
     private static OkHttpClient client = buildClient();

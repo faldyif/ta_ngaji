@@ -49,5 +49,7 @@ public interface ApiService {
 
     @GET("v1/events")
     Call<EventsResponse> listStudentEvent(@Query("active") Integer active);
+    @GET("v1/history/events")
+    Call<EventsResponse> listHistoryStudentEvent(@Query("status") String status);
 
 }

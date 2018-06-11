@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import com.google.gson.Gson;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.TokenManager;
+import com.preklit.ngaji.activity.DetailEventStudentActivity;
 import com.preklit.ngaji.activity.LoginActivity;
 import com.preklit.ngaji.adapter.ListEventStudentAdapter;
 import com.preklit.ngaji.entities.Event;
@@ -56,16 +57,21 @@ public class ListEventStudentFragment extends Fragment {
     List<Event> items;
     private TokenManager tokenManager;
     private RelativeLayout noItem;
-    private Boolean active;
+    private String status;
+    Gson gson;
 
     public ListEventStudentFragment() {
         // Required empty public constructor
     }
 
-    public static ListEventStudentFragment newInstance(Context context, Boolean active) {
+    public static ListEventStudentFragment newInstance(Context context, String status) {
         ListEventStudentFragment fragment = new ListEventStudentFragment();
         fragment.context = context;
-        fragment.active = active;
+        fragment.status = status;
+        fragment.gson = new Gson();
+
+        fragment.tokenManager = TokenManager.getInstance(context.getSharedPreferences("prefs", MODE_PRIVATE));
+        fragment.service = RetrofitBuilder.createServiceWithAuth(ApiService.class, fragment.tokenManager);
 
         // do some magic
         return fragment;
@@ -75,14 +81,10 @@ public class ListEventStudentFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        tokenManager = TokenManager.getInstance(context.getSharedPreferences("prefs", MODE_PRIVATE));
-
         if(tokenManager.getToken() == null){
             startActivity(new Intent(context, LoginActivity.class));
             getActivity().finish();
         }
-
-        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
     }
 
     @Override
@@ -126,7 +128,7 @@ public class ListEventStudentFragment extends Fragment {
         lyt_progress.setAlpha(1.0f);
         recyclerView.setVisibility(View.GONE);
 
-        call = service.listStudentEvent(active ? 0 : 1);
+        call = service.listHistoryStudentEvent(status);
         call.enqueue(new Callback<EventsResponse>() {
             @Override
             public void onResponse(Call<EventsResponse> call, Response<EventsResponse> response) {
@@ -178,5 +180,26 @@ public class ListEventStudentFragment extends Fragment {
 //                startActivity(intent);
 //            }
 //        });
+
+        // on item clicked
+        mAdapter.setOnItemClickListener(new ListEventStudentAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, Event obj, int position) {
+                Intent intent = new Intent(context, DetailEventStudentActivity.class);
+                intent.putExtra("event_detail", gson.toJson(obj));
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

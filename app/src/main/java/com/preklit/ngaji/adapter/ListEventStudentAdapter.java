@@ -92,6 +92,17 @@ public class ListEventStudentAdapter extends RecyclerView.Adapter<RecyclerView.V
             Tools.displayImageRoundFromUrl(ctx, view.image, p.getTeacher().getProfilePicUrl());
             // Set status
             view.status.setText(p.getStatus().toUpperCase());
+            switch (p.getStatus()) {
+                case "accepted":
+                    view.status.setTextColor(ctx.getResources().getColor(R.color.green_600));
+                    break;
+                case "rejected":
+                    view.status.setTextColor(ctx.getResources().getColor(R.color.red_400));
+                    break;
+                case "pending":
+                    view.status.setTextColor(ctx.getResources().getColor(R.color.grey_600));
+                    break;
+            }
             // Set time info
             Date dateStart = Tools.convertDateTimeMySQLStringToJavaDate(p.getStartTime());
             Date dateEnd = Tools.convertDateTimeMySQLStringToJavaDate(p.getEndTime());

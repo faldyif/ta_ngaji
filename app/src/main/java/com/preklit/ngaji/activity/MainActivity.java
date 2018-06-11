@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @OnClick(R.id.menu_santri_jadwal)
+    @OnClick(R.id.menu_santri_history)
     void openMenuSantriJadwal() {
         Intent intent = new Intent(MainActivity.this, ListEventForStudentActivity.class);
         startActivity(intent);
