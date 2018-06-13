@@ -241,7 +241,7 @@ public class DetailTeacherFreeTimeActivity extends AppCompatActivity {
                 Log.w(TAG, "onResponse: " + response.body().getError());
 
                 if(response.isSuccessful()){
-                    if(!response.body().getError()) {
+                    if(response.code() == 204) {
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }

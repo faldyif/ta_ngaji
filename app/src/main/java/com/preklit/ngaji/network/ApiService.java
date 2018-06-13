@@ -13,6 +13,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 import static com.preklit.ngaji.network.RetrofitBuilder.apiVersion;
@@ -22,17 +23,28 @@ import static com.preklit.ngaji.network.RetrofitBuilder.apiVersion;
  */
 
 public interface ApiService {
+    // -- BEGIN AUTHENTICATION ROUTES -- //
     @POST("register")
     @FormUrlEncoded
     Call<RegisterResponse> register(@Field("name") String name, @Field("email") String email, @Field("password") String password, @Field("gender") Character gender, @Field("whatsapp_number") String whatsappNumber);
 
     @POST("login")
     @FormUrlEncoded
-    Call<AccessToken> login(@Field("username") String username, @Field("password") String password);
+    Call<AccessToken> login(@Field("username") String username, @Field("password") String password, @Field("firebase_token") String firebaseToken);
 
     @POST("refresh")
     @FormUrlEncoded
     Call<AccessToken> refresh(@Field("refresh_token") String refreshToken);
+
+    @POST("v1/logout")
+    @FormUrlEncoded
+    Call<Object> logout(@Field("firebase_token") String firebaseToken);
+    // -- END AUTHENTICATION ROUTES -- //
+
+    // Firebase refresh token
+    @PUT("v1/firebase/token")
+    @FormUrlEncoded
+    Call<Object> refreshFirebaseToken(@Field("firebase_token") String firebaseToken);
 
     // Find teacher free time
     @GET("v1/finder/events/filter")

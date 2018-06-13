@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.TokenManager;
@@ -21,6 +22,7 @@ import com.preklit.ngaji.entities.SelfUserDetail;
 import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
 import com.preklit.ngaji.network.ApiService;
 import com.preklit.ngaji.network.RetrofitBuilder;
+import com.preklit.ngaji.network.firebase.FirebaseInstanceIDService;
 import com.preklit.ngaji.utils.Tools;
 import com.preklit.ngaji.utils.ViewAnimation;
 
@@ -37,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private Call<SelfUserDetail> call;
     private TokenManager tokenManager;
     private UserManager userManager;
     private ApiService service;
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void getSelfUserData(){
-        call = service.refreshSelfUserDetail();
+        Call<SelfUserDetail> call = service.refreshSelfUserDetail();
         call.enqueue(new Callback<SelfUserDetail>() {
             @Override
             public void onResponse(Call<SelfUserDetail> call, Response<SelfUserDetail> response) {
@@ -148,11 +149,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void logOut() {
-        tokenManager.deleteToken();
-        userManager.deleteUser();
+        String firebaseToken = FirebaseInstanceId.getInstance().getToken();
+        Call<Object> call = service.logout(firebaseToken);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                Log.w(TAG, "onResponse: " + response );
 
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
+                if(response.isSuccessful()){
+                    tokenManager.deleteToken();
+                    userManager.deleteUser();
+
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else {
+                    Toast.makeText(MainActivity.this, "Kok gagal", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Log.w(TAG, "onFailure: " + t.getMessage() );
+            }
+        });
     }
 }

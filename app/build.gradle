@@ -22,6 +22,7 @@ android {
 
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.google.firebase:firebase-messaging:12.0.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // google support library ---------------------------------------------------------------------
@@ -66,3 +67,6 @@ dependencies {
     // memory leak detection
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 }
+
+
+apply plugin: 'com.google.gms.google-services'

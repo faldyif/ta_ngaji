@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.TokenManager;
 import com.preklit.ngaji.Utils;
@@ -115,8 +116,9 @@ public class LoginActivity extends AppCompatActivity {
         validator.clear();
 
         if (validator.validate()) {
+            String firebaseToken = FirebaseInstanceId.getInstance().getToken();
             showLoading();
-            call = service.login(email, password);
+            call = service.login(email, password, firebaseToken);
             call.enqueue(new Callback<AccessToken>() {
                 @Override
                 public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
