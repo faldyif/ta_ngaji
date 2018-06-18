@@ -40,6 +40,7 @@
         <activity android:name=".activity.TeacherSearchActivity" />
         <activity android:name=".activity.ListTeacherFreeTimeActivity" />
         <activity android:name=".activity.DetailTeacherFreeTimeActivity" />
+        <activity android:name=".activity.TimelineEventStudentActivity" />
         <activity
             android:name=".activity.MapsActivity"
             android:label="@string/title_activity_maps" />
