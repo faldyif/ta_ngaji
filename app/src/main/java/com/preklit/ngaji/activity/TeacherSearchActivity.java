@@ -1,6 +1,8 @@
 package com.preklit.ngaji.activity;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -21,6 +22,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.preklit.ngaji.R;
@@ -28,11 +30,14 @@ import com.preklit.ngaji.utils.Tools;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -199,15 +204,43 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 choosenPlace = PlacePicker.getPlace(this, data);
-                latLngBounds = PlacePicker.getLatLngBounds(data);
+                Log.w(TAG, "onActivityResult: " + choosenPlace.getPlaceTypes() + " --- " + choosenPlace.getAddress());
+                latLngBounds = choosenPlace.getViewport();
                 latitude = latLngBounds.getCenter().latitude;
                 longitude = latLngBounds.getCenter().longitude;
-                ((TextView) findViewById(R.id.tv_destination)).setText(choosenPlace.getName());
+
+                // Test reverse geocoding
+                List<Address> addresses = doReverseGeocoding(latitude, longitude);
+                Log.w(TAG, "onActivityResultAddress: " + addresses);
+                String featureName = "";
+                if(choosenPlace.getPlaceTypes().get(0) == 0) {
+                    Log.w(TAG, "onActivityResult: " + "Bukan tempat mbok");
+                    featureName = addresses.get(0).getFeatureName();
+                } else {
+                    featureName += choosenPlace.getName();
+                }
+                String combinedAddress = featureName + ", " + addresses.get(0).getLocality() + ", " + addresses.get(0).getSubAdminArea();
+
+//                ((TextView) findViewById(R.id.tv_destination)).setText(choosenPlace.getName());
+                ((TextView) findViewById(R.id.tv_destination)).setText(combinedAddress);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Snackbar.make(parent_view, status.toString(), Snackbar.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private List<Address> doReverseGeocoding(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = null;
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            Log.w(TAG, "onActivityResult: " + addresses);
+        } catch (IOException e) {
+            return doReverseGeocoding(latitude, longitude);
+        }
+        return addresses;
     }
 
     @OnClick(R.id.tv_destination)
@@ -254,7 +287,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
             Date dateEnd = calendar.getTime();
             Gson gson = new Gson();
 
-            Intent intent = new Intent(TeacherSearchActivity.this, ListTeacherFreeTimeActivity.class);
+            Intent intent = new Intent(TeacherSearchActivity.this, ListEventSearchActivity.class);
             intent.putExtra("start_time", gson.toJson(dateStart));
             intent.putExtra("end_time", gson.toJson(dateEnd));
             intent.putExtra("latitude", latitude);

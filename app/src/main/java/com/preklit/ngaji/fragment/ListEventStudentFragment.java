@@ -169,7 +169,7 @@ public class ListEventStudentFragment extends Fragment {
 //            @Override
 //            public void onItemClick(View view, TeacherFreeTime obj, int position) {
 //                Snackbar.make(parent_view, "Item " + obj.getTeacher().getName() + " clicked", Snackbar.LENGTH_SHORT).show();
-//                Intent intent = new Intent(ListTeacherFreeTimeActivity.this, DetailTeacherFreeTimeActivity.class);
+//                Intent intent = new Intent(ListEventSearchActivity.this, DetailTeacherFreeTimeActivity.class);
 //                intent.putExtra("free_time_details", gson.toJson(obj));
 //                intent.putExtra("latitude_choosen", latitude);
 //                intent.putExtra("longitude_choosen", longitude);

@@ -5,10 +5,8 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -17,13 +15,11 @@ import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
@@ -36,31 +32,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
 import com.preklit.ngaji.R;
-import com.preklit.ngaji.TokenManager;
-import com.preklit.ngaji.Utils;
-import com.preklit.ngaji.activity.ListTeacherFreeTimeActivity;
-import com.preklit.ngaji.activity.LoginActivity;
-import com.preklit.ngaji.activity.MainActivity;
-import com.preklit.ngaji.entities.AccessToken;
-import com.preklit.ngaji.entities.ApiError;
-import com.preklit.ngaji.entities.SelfUserDetail;
-import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
-import com.preklit.ngaji.network.ApiService;
-import com.preklit.ngaji.network.RetrofitBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Tools {
 
