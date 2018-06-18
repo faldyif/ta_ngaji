@@ -11,6 +11,9 @@ android {
         versionCode 20
         versionName "2.0"
         vectorDrawables.useSupportLibrary = true
+
+        // Enabling multidex support.
+        multiDexEnabled true
     }
     buildTypes {
         release {
