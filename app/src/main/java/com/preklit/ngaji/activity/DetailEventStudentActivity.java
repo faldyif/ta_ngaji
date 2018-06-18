@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -46,6 +47,8 @@ import com.preklit.ngaji.network.ApiService;
 import com.preklit.ngaji.network.RetrofitBuilder;
 import com.preklit.ngaji.utils.Tools;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -57,6 +60,8 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.preklit.ngaji.MyApp.APP_NAME;
 
 public class DetailEventStudentActivity extends AppCompatActivity {
 
@@ -238,6 +243,29 @@ public class DetailEventStudentActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+        } else if (item.getItemId() == R.id.action_whatsapp) {
+            String message = "Assalamualaikum," + "\n" + "Saya " + event.getStudent().getName() + ", murid anda dari aplikasi " + APP_NAME + "\n";
+            try {
+                String url = "https://api.whatsapp.com/send?phone=" + event.getTeacher().getWhatsappNumber().substring(1) + "&text=" + URLEncoder.encode(message, "UTF-8");
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else if (item.getItemId() == R.id.action_sms) {
+            String message = "Assalamualaikum," + "\n" + "Saya " + event.getStudent().getName() + ", murid anda dari aplikasi " + APP_NAME + "\n";
+
+
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("smsto:"+event.getTeacher().getWhatsappNumber())); // This ensures only SMS apps respond
+            intent.putExtra("sms_body", message);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
+        } else if (item.getItemId() == R.id.action_call) {
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", event.getTeacher().getWhatsappNumber(), null));
+            startActivity(intent);
         } else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }

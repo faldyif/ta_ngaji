@@ -14,6 +14,8 @@ import okhttp3.OkHttpClient;
 
 public class MyApp extends Application {
 
+    public static final String APP_NAME = "NgajiYuk!";
+
     @Override
     public void onCreate() {
         super.onCreate();
