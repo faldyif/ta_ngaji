@@ -238,14 +238,12 @@ public class DetailTeacherFreeTimeActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<CreateResponse> call, Response<CreateResponse> response) {
                 Log.w(TAG, "onResponse: " + response );
-                Log.w(TAG, "onResponse: " + response.body().getError());
 
                 if(response.isSuccessful()){
                     if(response.code() == 204) {
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
-                        Log.w(TAG, "onResponse: " + !response.body().getError());
                         showSuccessDialog("Berhasil mengirim permintaan jadwal ke calon guru! Anda akan dikirimkan notifikasi ketika guru anda sudah menerima permintaan jadwal anda");
                     }
                 }else {

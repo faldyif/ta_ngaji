@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.teacher_card_section)
+    CardView teacherCardSection;
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private TokenManager tokenManager;
@@ -64,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
             getSelfUserData();
         } else {
             toolbar.setTitle("Halo, " + userManager.getUserDetail().getName());
+            initTeacherMenu();
+        }
+    }
+
+    private void initTeacherMenu() {
+        Log.w(TAG, "initTeacherMenu: " + userManager.getUserDetail().getRole());
+        if(!userManager.getUserDetail().getRole().equals("teacher")) {
+            teacherCardSection.setVisibility(View.GONE);
         }
     }
 
@@ -119,8 +130,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.menu_santri_history)
-    void openMenuSantriJadwal() {
+    void openMenuSantriHistory() {
         Intent intent = new Intent(MainActivity.this, ListEventForStudentActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.menu_santri_jadwal)
+    void openMenuSantriJadwal() {
+        Intent intent = new Intent(MainActivity.this, TimelineEventStudentActivity.class);
         startActivity(intent);
     }
 
@@ -135,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.w(TAG, "onResponse: " + response.body());
                     userManager.saveUser(response.body());
                     toolbar.setTitle("Halo, " + userManager.getUserDetail().getName());
+                    initTeacherMenu();
                 }else {
                     Toast.makeText(MainActivity.this, "Kok gagal", Toast.LENGTH_SHORT).show();
                 }

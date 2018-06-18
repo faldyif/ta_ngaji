@@ -49,6 +49,7 @@ public class ListEventForStudentActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(3);         /* limit is a fixed integer*/
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
@@ -82,7 +83,9 @@ public class ListEventForStudentActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        } else if (id == R.id.action_settings) {
             return true;
         }
 
