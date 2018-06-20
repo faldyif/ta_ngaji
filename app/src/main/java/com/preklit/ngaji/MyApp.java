@@ -1,6 +1,8 @@
 package com.preklit.ngaji;
 
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
@@ -12,7 +14,7 @@ import okhttp3.OkHttpClient;
  * Created by Faldy on 4/17/2018.
  */
 
-public class MyApp extends Application {
+public class MyApp extends MultiDexApplication {
 
     public static final String APP_NAME = "NgajiYuk!";
 
@@ -34,5 +36,7 @@ public class MyApp extends Application {
         }
         LeakCanary.install(this);
         // Normal app init code...
+
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 }
