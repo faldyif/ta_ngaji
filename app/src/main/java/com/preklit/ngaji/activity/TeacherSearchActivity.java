@@ -222,7 +222,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
                 String combinedAddress = featureName + ", " + addresses.get(0).getLocality() + ", " + addresses.get(0).getSubAdminArea();
 
 //                ((TextView) findViewById(R.id.tv_destination)).setText(choosenPlace.getName());
-                ((TextView) findViewById(R.id.tv_destination)).setText(combinedAddress);
+                textViewDestination.setText(combinedAddress);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Snackbar.make(parent_view, status.toString(), Snackbar.LENGTH_SHORT).show();
@@ -293,6 +293,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
             intent.putExtra("latitude", latitude);
             intent.putExtra("longitude", longitude);
             intent.putExtra("event_type", type);
+            intent.putExtra("short_place_name", "" + textViewDestination.getText());
             intent.putExtra("location_details", "" + etLocationDetails.getText());
 
             Log.w(TAG, "onCreate: " + etLocationDetails.getText());

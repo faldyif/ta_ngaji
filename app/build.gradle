@@ -50,19 +50,18 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     // third party dependencies -------------------------------------------------------------------
-    compile 'com.balysv:material-ripple:1.0.2'                  // ripple effect
-    compile 'com.github.bumptech.glide:glide:3.7.0'             // image loader
-    compile 'com.wdullaer:materialdatetimepicker:3.2.0'         // date & time picker
-    compile 'com.mikhaellopez:circularimageview:3.0.2'          // circle image view
-    compile 'com.github.pchmn:MaterialChipsInput:1.0.5'         // material chip
-    compile 'com.hootsuite.android:nachos:1.1.1'                // material chips
-    compile 'com.google.android:flexbox:0.3.2'                  // google flexible box
-    implementation 'com.basgeekball:awesome-validation:4.1'     // validation service
-    compile 'com.google.code.gson:gson:2.8.4'                   // gson for debugging
-    implementation 'com.squareup.picasso:picasso:2.71828'       // picasso
-
-
-    compile 'com.android.support:multidex:1.0.3'
+    compile 'com.balysv:material-ripple:1.0.2'                      // ripple effect
+    compile 'com.github.bumptech.glide:glide:3.7.0'                 // image loader
+    compile 'com.wdullaer:materialdatetimepicker:3.2.0'             // date & time picker
+    compile 'com.mikhaellopez:circularimageview:3.0.2'              // circle image view
+    compile 'com.github.pchmn:MaterialChipsInput:1.0.5'             // material chip
+    compile 'com.hootsuite.android:nachos:1.1.1'                    // material chips
+    compile 'com.google.android:flexbox:0.3.2'                      // google flexible box
+    implementation 'com.basgeekball:awesome-validation:4.1'         // validation service
+    compile 'com.google.code.gson:gson:2.8.4'                       // gson for debugging
+    implementation 'com.squareup.picasso:picasso:2.71828'           // picasso
+    implementation 'com.github.marlonlom:timeago:3.0.2'             // java timeago
+    compile 'com.android.support:multidex:1.0.3'                    // multidex compiling support
 
     // debugging tools ----------------------------------------------------------------------------
     compile 'com.facebook.stetho:stetho:1.5.0'

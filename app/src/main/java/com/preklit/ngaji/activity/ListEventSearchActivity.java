@@ -135,6 +135,7 @@ public class ListEventSearchActivity extends AppCompatActivity {
                 intent.putExtra("time_start", myIntent.getStringExtra("start_time"));
                 intent.putExtra("time_end", myIntent.getStringExtra("end_time"));
                 intent.putExtra("location_details", myIntent.getStringExtra("location_details"));
+                intent.putExtra("short_place_name", myIntent.getStringExtra("short_place_name"));
                 startActivity(intent);
             }
         });

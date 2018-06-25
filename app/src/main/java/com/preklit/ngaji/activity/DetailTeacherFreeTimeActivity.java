@@ -91,6 +91,7 @@ public class DetailTeacherFreeTimeActivity extends AppCompatActivity {
     Date dateEnd;
     String eventType;
     String locationDetails;
+    String shortPlaceName;
 
     private Call<CreateResponse> call;
     private TokenManager tokenManager;
@@ -112,6 +113,7 @@ public class DetailTeacherFreeTimeActivity extends AppCompatActivity {
         dateEnd = gson.fromJson(intent.getStringExtra("time_end"), Date.class);
         eventType = intent.getStringExtra("event_type");
         locationDetails = intent.getStringExtra("location_details");
+        shortPlaceName = intent.getStringExtra("short_place_name");
         Log.w(TAG, "onCreate: " + locationDetails);
 
         progressDialog = new ProgressDialog(this);
@@ -233,7 +235,7 @@ public class DetailTeacherFreeTimeActivity extends AppCompatActivity {
 
         Log.w(TAG, "sendRequest: " + locationDetails);
 
-        call = service.createEvent(latitude, longitude, Tools.convertDateToDateTimeMySQL(dateStart), Tools.convertDateToDateTimeMySQL(dateEnd), eventType, String.valueOf(teacherFreeTime.getId()), locationDetails);
+        call = service.createEvent(latitude, longitude, Tools.convertDateToDateTimeMySQL(dateStart), Tools.convertDateToDateTimeMySQL(dateEnd), eventType, String.valueOf(teacherFreeTime.getId()), locationDetails, shortPlaceName);
         call.enqueue(new Callback<CreateResponse>() {
             @Override
             public void onResponse(Call<CreateResponse> call, Response<CreateResponse> response) {

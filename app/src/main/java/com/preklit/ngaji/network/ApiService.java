@@ -57,7 +57,7 @@ public interface ApiService {
     // Create event request
     @POST("v1/events")
     @FormUrlEncoded
-    Call<CreateResponse> createEvent(@Field("latitude") Double latitude, @Field("longitude") Double longitude, @Field("time_start") String timeStart, @Field("time_end") String timeEnd, @Field("event_type") String eventType, @Field("teacher_free_time_id") String teacherFreeTimeId, @Field("location_details") String locationDetails);
+    Call<CreateResponse> createEvent(@Field("latitude") Double latitude, @Field("longitude") Double longitude, @Field("time_start") String timeStart, @Field("time_end") String timeEnd, @Field("event_type") String eventType, @Field("teacher_free_time_id") String teacherFreeTimeId, @Field("location_details") String locationDetails, @Field("short_place_name") String shortPlaceName);
 
     @GET("v1/events")
     Call<EventsResponse> listStudentEvent(@Query("active") Integer active);
