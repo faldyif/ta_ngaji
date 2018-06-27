@@ -35,6 +35,8 @@ public class TeacherFreeTime {
     Integer teacherRank;
     @Json(name = "points")
     Integer points;
+    @Json(name = "total_events")
+    Integer totalEvents;
 
     public Integer getId() {
         return id;
@@ -74,6 +76,10 @@ public class TeacherFreeTime {
 
     public Integer getPoints() {
         return points;
+    }
+
+    public Integer getTotalEvents() {
+        return totalEvents;
     }
 
     public Date getDateStart() {

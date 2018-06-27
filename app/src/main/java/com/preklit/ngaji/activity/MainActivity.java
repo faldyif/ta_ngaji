@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.TokenManager;
 import com.preklit.ngaji.UserManager;
+import com.preklit.ngaji.activity.teacher.ListTeacherFreeTimeActivity;
 import com.preklit.ngaji.entities.SelfUserDetail;
 import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
 import com.preklit.ngaji.network.ApiService;
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.menu_guru_jadwal)
     void clickMenuGuruJadwal() {
-        Intent intent = new Intent(MainActivity.this, JadwalGuruActivity.class);
+        Intent intent = new Intent(MainActivity.this, ListTeacherFreeTimeActivity.class);
         startActivity(intent);
     }
 

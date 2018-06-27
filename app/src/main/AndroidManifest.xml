@@ -33,10 +33,6 @@
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.SignUpActivity" />
         <activity android:name=".activity.IntroActivity" />
-        <activity
-            android:name=".activity.JadwalGuruActivity"
-            android:label="@string/title_activity_jadwal_guru"
-            android:theme="@style/AppTheme" />
         <activity android:name=".activity.TeacherSearchActivity" />
         <activity android:name=".activity.ListEventSearchActivity" />
         <activity android:name=".activity.DetailTeacherFreeTimeActivity" />
@@ -45,23 +41,23 @@
             android:name=".activity.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:configChanges="orientation|screenSize"
             android:name=".activity.ListEventForStudentActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_list_event_for_student" />
         <activity android:name=".activity.DetailEventStudentActivity" />
 
-        <service
-            android:name=".network.firebase.FirebaseInstanceIDService">
+        <service android:name=".network.firebase.FirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".network.firebase.FirebaseMessagingService">
+        <service android:name=".network.firebase.FirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".activity.teacher.ListTeacherFreeTimeActivity"></activity>
     </application>
 
 </manifest>

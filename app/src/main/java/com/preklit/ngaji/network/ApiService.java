@@ -64,4 +64,8 @@ public interface ApiService {
     @GET("v1/history/events")
     Call<EventsResponse> listHistoryStudentEvent(@Query("status") String status);
 
+    // Teacher Only
+    @GET("v1/teacher/freetime")
+    Call<TeacherFreeTimeResponse> indexTeacherFreeTime();
+
 }
