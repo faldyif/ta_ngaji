@@ -85,21 +85,7 @@
                     android:maxLines="1"
                     android:minHeight="@dimen/spacing_xmlarge"
                     android:singleLine="true"
-                    android:hint="Tempat Belajar Tahsin"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="@color/grey_80" />
-
-                <EditText
-                    android:id="@+id/et_detail_destination"
-                    android:nextFocusUp="@id/et_detail_destination"
-                    android:nextFocusLeft="@id/et_detail_destination"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:gravity="center_vertical"
-                    android:maxLines="3"
-                    android:minHeight="@dimen/spacing_xmlarge"
-                    android:hint="Keterangan Lokasi"
+                    android:hint="Tempat Acuan"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/grey_80" />
 
@@ -139,7 +125,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_date_study"
+                    android:id="@+id/tv_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackground"
@@ -147,20 +133,7 @@
                     android:maxLines="1"
                     android:minHeight="@dimen/spacing_xmlarge"
                     android:singleLine="true"
-                    android:hint="Tanggal Belajar"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="@color/grey_80" />
-
-                <TextView
-                    android:id="@+id/tv_time_study"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:minHeight="@dimen/spacing_xmlarge"
-                    android:singleLine="true"
-                    android:hint="Jam Mulai Belajar"
+                    android:hint="Tanggal Waktu Luang"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/grey_80" />
 
@@ -188,7 +161,7 @@
                 android:layout_height="@dimen/spacing_mxlarge"
                 android:background="@android:color/transparent"
                 android:tint="@color/colorPrimary"
-                app:srcCompat="@drawable/ic_progress_clock" />
+                app:srcCompat="@drawable/ic_history" />
 
             <View
                 android:layout_width="@dimen/spacing_large"
@@ -199,8 +172,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <Spinner
-                    android:id="@+id/spinner_duration_study"
+                <TextView
+                    android:id="@+id/tv_time_start"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackground"
@@ -208,6 +181,20 @@
                     android:maxLines="1"
                     android:minHeight="@dimen/spacing_xmlarge"
                     android:singleLine="true"
+                    android:hint="Jam Mulai Waktu Luang"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="@color/grey_80" />
+
+                <TextView
+                    android:id="@+id/tv_time_end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:minHeight="@dimen/spacing_xmlarge"
+                    android:singleLine="true"
+                    android:hint="Jam Selesai Waktu Luang"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/grey_80" />
 
@@ -220,8 +207,6 @@
 
         </LinearLayout>
 
-    </LinearLayout>
-
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/bt_search"
@@ -232,7 +217,7 @@
         android:gravity="center"
         android:paddingLeft="@dimen/spacing_xlarge"
         android:paddingRight="@dimen/spacing_xlarge"
-        android:text="CARI GURU"
+        android:text="TAMBAH WAKTU LUANG"
         android:textColor="@android:color/white" />
 
 </LinearLayout>
@@ -240,3 +225,4 @@
 
 
 
+</LinearLayout>

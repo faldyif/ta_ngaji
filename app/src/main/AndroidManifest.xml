@@ -57,7 +57,9 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activity.teacher.ListTeacherFreeTimeActivity"></activity>
+        <!--TEACHER ACTIVITY-->
+        <activity android:name=".activity.teacher.ListTeacherFreeTimeActivity" />
+        <activity android:name=".activity.teacher.AddNewTeacherFreeTimeActivity" />
     </application>
 
 </manifest>

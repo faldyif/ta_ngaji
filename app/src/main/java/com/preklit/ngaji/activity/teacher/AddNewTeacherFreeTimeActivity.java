@@ -42,7 +42,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddNewTeacherFreeTimeActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
 
     private static final String TAG = "TeacherSearchActivity";
     private View parent_view;
@@ -50,34 +50,31 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity implements 
 
     public static Place choosenPlace;
     public static Long choosenDateMillis;
-    public Integer choosenHour;
-    public Integer choosenMinute;
-    public static String durationString;
-    public static Integer studyDuration;
+    public Integer choosenHourStart;
+    public Integer choosenMinuteStart;
+    public Integer choosenHourEnd;
+    public Integer choosenMinuteEnd;
     int[] durationIntegerArray;
     private LatLngBounds latLngBounds;
     private double longitude;
     private double latitude;
     private String type;
 
-    @BindView(R.id.tv_date_study)
-    TextView textViewDateStudy;
+    @BindView(R.id.tv_date)
+    TextView textViewDate;
     @BindView(R.id.tv_destination)
     TextView textViewDestination;
-    @BindView(R.id.tv_time_study)
-    TextView textViewTimeStudy;
-    @BindView(R.id.et_detail_destination)
-    EditText etLocationDetails;
-    @BindView(R.id.spinner_duration_study)
-    Spinner spinnerDurationStudy;
+    @BindView(R.id.tv_time_start)
+    TextView textViewTimeStart;
+    @BindView(R.id.tv_time_end)
+    TextView textViewTimeEnd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_teacher_search);
+        setContentView(R.layout.activity_add_teacher_free_time);
         parent_view = findViewById(android.R.id.content);
         ButterKnife.bind(this);
-        studyDuration = 15;
         Intent intent = getIntent();
         type = intent.getStringExtra("ngaji_type");
 
@@ -94,17 +91,10 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity implements 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         Tools.setSystemBarColor(this, R.color.grey_90);
-        textViewDestination.setHint("Tempat belajar " + type);
     }
 
     private void initComponent() {
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-            R.array.duration_string_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinnerDurationStudy.setAdapter(adapter);
+
     }
 
     /**
@@ -147,7 +137,7 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity implements 
                         calendar.set(Calendar.MINUTE, 0);
                         calendar.set(Calendar.SECOND, 0);
                         choosenDateMillis = calendar.getTimeInMillis();
-                        textViewDateStudy.setText(Tools.getFormattedDateSimple(choosenDateMillis));
+                        textViewDate.setText(Tools.getFormattedDateSimple(choosenDateMillis));
                     }
                 },
                 cur_calender.get(Calendar.YEAR),
@@ -165,15 +155,15 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity implements 
      * Dialog for time picker
      */
     private void dialogTimePickerLight() {
-        if(choosenHour == null && choosenMinute == null) {
+        if(choosenHourStart == null && choosenMinuteStart == null) {
             Calendar cur_calender = Calendar.getInstance();
             TimePickerDialog datePicker = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                    choosenHour = hourOfDay;
-                    choosenMinute = minute;
+                    choosenHourStart = hourOfDay;
+                    choosenMinuteStart = minute;
                     NumberFormat f = new DecimalFormat("00");
-                    textViewTimeStudy.setText(f.format(choosenHour) + " : " + f.format(choosenMinute));
+                    textViewTimeStart.setText(f.format(choosenHourStart) + " : " + f.format(choosenMinuteStart));
                 }
             }, cur_calender.get(Calendar.HOUR_OF_DAY), cur_calender.get(Calendar.MINUTE), true);
             //set dark light
@@ -184,12 +174,44 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity implements 
             TimePickerDialog datePicker = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                    choosenHour = hourOfDay;
-                    choosenMinute = minute;
+                    choosenHourStart = hourOfDay;
+                    choosenMinuteStart = minute;
                     NumberFormat f = new DecimalFormat("00");
-                    textViewTimeStudy.setText(f.format(choosenHour) + " : " + f.format(choosenMinute));
+                    textViewTimeStart.setText(f.format(choosenHourStart                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ) + " : " + f.format(choosenMinuteStart));
                 }
-            }, choosenHour, choosenMinute, true);
+            }, choosenHourStart, choosenMinuteStart, true);
+            //set dark light
+            datePicker.setThemeDark(false);
+            datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
+            datePicker.show(getFragmentManager(), "Timepickerdialog");
+        }
+    }
+    private void dialogTimePickerLightEnd() {
+        if(choosenHourEnd == null && choosenMinuteEnd == null) {
+            Calendar cur_calender = Calendar.getInstance();
+            TimePickerDialog datePicker = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                    choosenHourEnd = hourOfDay;
+                    choosenMinuteEnd = minute;
+                    NumberFormat f = new DecimalFormat("00");
+                    textViewTimeEnd.setText(f.format(choosenHourEnd) + " : " + f.format(choosenMinuteEnd));
+                }
+            }, cur_calender.get(Calendar.HOUR_OF_DAY), cur_calender.get(Calendar.MINUTE), true);
+            //set dark light
+            datePicker.setThemeDark(false);
+            datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
+            datePicker.show(getFragmentManager(), "Timepickerdialog");
+        } else {
+            TimePickerDialog datePicker = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                    choosenHourEnd = hourOfDay;
+                    choosenMinuteEnd = minute;
+                    NumberFormat f = new DecimalFormat("00");
+                    textViewTimeEnd.setText(f.format(choosenHourEnd                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ) + " : " + f.format(choosenMinuteStart));
+                }
+            }, choosenHourEnd, choosenMinuteEnd, true);
             //set dark light
             datePicker.setThemeDark(false);
             datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
@@ -205,6 +227,11 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity implements 
                 choosenPlace = PlacePicker.getPlace(this, data);
                 Log.w(TAG, "onActivityResult: " + choosenPlace.getPlaceTypes() + " --- " + choosenPlace.getAddress());
                 latLngBounds = choosenPlace.getViewport();
+                if(latLngBounds == null) {
+                    Snackbar.make(parent_view, "Tempat tidak lazim", Snackbar.LENGTH_SHORT).show();
+                    choosenPlace = null;
+                    return;
+                }
                 latitude = latLngBounds.getCenter().latitude;
                 longitude = latLngBounds.getCenter().longitude;
 
@@ -247,14 +274,19 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity implements 
         openPlacePickerActivity(PLACE_PICKER_REQUEST);
     }
 
-    @OnClick(R.id.tv_date_study)
+    @OnClick(R.id.tv_date)
     void clickTextViewDateStudy() {
         dialogDatePickerLight();
     }
 
-    @OnClick(R.id.tv_time_study)
+    @OnClick(R.id.tv_time_end)
     void clickTextViewTimeStudy() {
         dialogTimePickerLight();
+    }
+
+    @OnClick(R.id.tv_time_end)
+    void clickTextViewTimeStudyEnd() {
+        dialogTimePickerLightEnd();
     }
 
     @OnClick(R.id.bt_search)
@@ -264,25 +296,29 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity implements 
     }
 
     void submitSearch() {
-        textViewTimeStudy.setError(null);
+        textViewDate.setError(null);
+        textViewTimeEnd.setError(null);
         textViewDestination.setError(null);
-        textViewDateStudy.setError(null);
+        textViewTimeStart.setError(null);
 
-        boolean validated = choosenPlace != null && choosenDateMillis != null && choosenHour != null && choosenMinute != null;
+        boolean validated = choosenPlace != null && choosenDateMillis != null && choosenHourStart != null && choosenMinuteStart != null && choosenHourEnd != null && choosenMinuteEnd != null;
 
-        if(choosenPlace == null) textViewDestination.setError("Bidang isian tempat belajar wajib diisi.");
-        if(choosenDateMillis == null) textViewDateStudy.setError("Bidang isian tanggal belajar wajib diisi.");
-        if(choosenHour == null) textViewTimeStudy.setError("Bidang isian waktu belajar wajib diisi.");
+        if(choosenPlace == null) textViewDestination.setError("Bidang isian tempat acuan wajib diisi.");
+        if(choosenDateMillis == null) textViewDate.setError("Bidang isian tanggal wajib diisi.");
+        if(choosenHourStart == null) textViewTimeStart.setError("Bidang isian waktu mulai wajib diisi.");
+        if(choosenHourEnd == null) textViewTimeEnd.setError("Bidang isian waktu selesai wajib diisi.");
 
         if(validated) {
 //            Toast.makeText(this, "Validasi berhasil!", Toast.LENGTH_SHORT).show();
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(choosenDateMillis);
-            calendar.add(Calendar.HOUR_OF_DAY, choosenHour);
-            calendar.add(Calendar.MINUTE, choosenMinute);
+            calendar.add(Calendar.HOUR_OF_DAY, choosenHourStart);
+            calendar.add(Calendar.MINUTE, choosenMinuteStart);
             Date dateStart = calendar.getTime();
-            calendar.add(Calendar.MINUTE, studyDuration);
+            calendar.setTimeInMillis(choosenDateMillis);
+            calendar.add(Calendar.HOUR_OF_DAY, choosenHourEnd);
+            calendar.add(Calendar.MINUTE, choosenMinuteEnd);
             Date dateEnd = calendar.getTime();
             Gson gson = new Gson();
 
@@ -293,20 +329,9 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity implements 
             intent.putExtra("longitude", longitude);
             intent.putExtra("event_type", type);
             intent.putExtra("short_place_name", "" + textViewDestination.getText());
-            intent.putExtra("location_details", "" + etLocationDetails.getText());
 
-            Log.w(TAG, "onCreate: " + etLocationDetails.getText());
             startActivity(intent);
         }
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        studyDuration = durationIntegerArray[position];
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
     }
 
     @Override

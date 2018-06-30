@@ -206,6 +206,11 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
                 choosenPlace = PlacePicker.getPlace(this, data);
                 Log.w(TAG, "onActivityResult: " + choosenPlace.getPlaceTypes() + " --- " + choosenPlace.getAddress());
                 latLngBounds = choosenPlace.getViewport();
+                if(latLngBounds == null) {
+                    Snackbar.make(parent_view, "Tempat tidak lazim", Snackbar.LENGTH_SHORT).show();
+                    choosenPlace = null;
+                    return;
+                }
                 latitude = latLngBounds.getCenter().latitude;
                 longitude = latLngBounds.getCenter().longitude;
 
@@ -219,7 +224,12 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
                 } else {
                     featureName += choosenPlace.getName();
                 }
-                String combinedAddress = featureName + ", " + addresses.get(0).getLocality() + ", " + addresses.get(0).getSubAdminArea();
+                String combinedAddress = "";
+                if(addresses.size() > 0) {
+                    combinedAddress = featureName + ", " + addresses.get(0).getLocality() + ", " + addresses.get(0).getSubAdminArea();
+                } else {
+                    combinedAddress = featureName;
+                }
 
 //                ((TextView) findViewById(R.id.tv_destination)).setText(choosenPlace.getName());
                 textViewDestination.setText(combinedAddress);
@@ -236,8 +246,9 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
 
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            Log.w(TAG, "onActivityResult: " + addresses);
+            Log.w(TAG, "onActivityResult doReverseGeocoding: " + addresses);
         } catch (IOException e) {
+            e.printStackTrace();
             return doReverseGeocoding(latitude, longitude);
         }
         return addresses;

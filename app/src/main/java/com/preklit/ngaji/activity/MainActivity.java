@@ -1,5 +1,6 @@
 package com.preklit.ngaji.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private TokenManager tokenManager;
     private UserManager userManager;
     private ApiService service;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+        progressDialog = new ProgressDialog(this);
 
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         if(tokenManager.getToken() == null){
@@ -168,6 +171,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void logOut() {
+        progressDialog.setMessage("Silahkan tunggu...");
+        progressDialog.show();
+
         String firebaseToken = FirebaseInstanceId.getInstance().getToken();
         Call<Object> call = service.logout(firebaseToken);
         call.enqueue(new Callback<Object>() {
@@ -176,6 +182,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.w(TAG, "onResponse: " + response );
 
                 if(response.isSuccessful()){
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+
                     tokenManager.deleteToken();
                     userManager.deleteUser();
 

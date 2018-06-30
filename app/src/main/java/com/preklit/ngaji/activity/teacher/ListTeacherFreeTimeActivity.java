@@ -1,9 +1,9 @@
 package com.preklit.ngaji.activity.teacher;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 import com.google.gson.Gson;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.TokenManager;
-import com.preklit.ngaji.activity.DetailTeacherFreeTimeActivity;
 import com.preklit.ngaji.activity.ListEventSearchActivity;
 import com.preklit.ngaji.activity.LoginActivity;
 import com.preklit.ngaji.adapter.teacher.ListTeacherFreeTimeAdapter;
@@ -25,16 +24,15 @@ import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
 import com.preklit.ngaji.network.ApiService;
 import com.preklit.ngaji.network.RetrofitBuilder;
 import com.preklit.ngaji.utils.ItemAnimation;
-import com.preklit.ngaji.utils.Tools;
 import com.preklit.ngaji.utils.ViewAnimation;
 import com.preklit.ngaji.widget.LineItemDecoration;
 import com.preklit.ngaji.widget.RecyclerViewEmptySupport;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -73,18 +71,18 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Daftar Guru");
+        getSupportActionBar().setTitle("Daftar Waktu Luang Saya");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initComponent() {
-        noItem = (RelativeLayout) findViewById(R.id.no_result);
+        noItem = findViewById(R.id.no_result);
         noItem.setVisibility(View.GONE);
 
-        recyclerView = (RecyclerViewEmptySupport) findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new LineItemDecoration(this, LinearLayout.VERTICAL));
@@ -169,7 +167,7 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
 //    }
 
     void getTeacherFreeTimeData(){
-        final LinearLayout lyt_progress = (LinearLayout) findViewById(R.id.lyt_progress);
+        final LinearLayout lyt_progress = findViewById(R.id.lyt_progress);
         lyt_progress.setVisibility(View.VISIBLE);
         lyt_progress.setAlpha(1.0f);
         recyclerView.setVisibility(View.GONE);
@@ -203,7 +201,6 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
                 Log.w(TAG, "onFailure: " + t.getMessage() );
             }
         });
-
     }
 
     @Override
@@ -213,5 +210,11 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
             call.cancel();
             call = null;
         }
+    }
+
+    @OnClick(R.id.fab_add)
+    void fabAdd() {
+        Intent intent = new Intent(ListTeacherFreeTimeActivity.this, AddNewTeacherFreeTimeActivity.class);
+        startActivity(intent);
     }
 }
