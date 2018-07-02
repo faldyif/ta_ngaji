@@ -54,6 +54,7 @@ public class ListTeacherFreeTimeAdapter extends RecyclerView.Adapter<RecyclerVie
         public TextView date;
         public TextView time;
         public TextView slot;
+        public TextView short_place_name;
         public View lyt_parent;
         public MaterialRippleLayout parentLayout;
 
@@ -62,6 +63,7 @@ public class ListTeacherFreeTimeAdapter extends RecyclerView.Adapter<RecyclerVie
             date = v.findViewById(R.id.date);
             time = v.findViewById(R.id.time);
             slot = v.findViewById(R.id.slot);
+            short_place_name = v.findViewById(R.id.short_place_name);
             lyt_parent = v.findViewById(R.id.lyt_parent);
             parentLayout = v.findViewById(R.id.parent_layout);
         }
@@ -92,6 +94,7 @@ public class ListTeacherFreeTimeAdapter extends RecyclerView.Adapter<RecyclerVie
             view.time.setText(sdfTime.format(dateStart) + " - " + sdfTime.format(dateEnd));
             view.date.setText(sdfDate.format(dateStart));
             view.slot.setText(p.getTotalEvents() + " slot terisi");
+            view.short_place_name.setText(p.getShortPlaceName());
 
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override

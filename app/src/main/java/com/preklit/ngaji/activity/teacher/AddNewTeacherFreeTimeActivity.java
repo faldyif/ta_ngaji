@@ -1,14 +1,20 @@
 package com.preklit.ngaji.activity.teacher;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -25,7 +31,14 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.preklit.ngaji.R;
+import com.preklit.ngaji.TokenManager;
+import com.preklit.ngaji.activity.DetailTeacherFreeTimeActivity;
 import com.preklit.ngaji.activity.ListEventSearchActivity;
+import com.preklit.ngaji.activity.LoginActivity;
+import com.preklit.ngaji.activity.MainActivity;
+import com.preklit.ngaji.entities.CreateResponse;
+import com.preklit.ngaji.network.ApiService;
+import com.preklit.ngaji.network.RetrofitBuilder;
 import com.preklit.ngaji.utils.Tools;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -41,6 +54,9 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
 
@@ -69,22 +85,37 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
     @BindView(R.id.tv_time_end)
     TextView textViewTimeEnd;
 
+    private Call<CreateResponse> call;
+    private TokenManager tokenManager;
+    private ApiService service;
+    private Date dateStart;
+    private Date dateEnd;
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_teacher_free_time);
         parent_view = findViewById(android.R.id.content);
         ButterKnife.bind(this);
-        Intent intent = getIntent();
-        type = intent.getStringExtra("ngaji_type");
+        progressDialog = new ProgressDialog(this);
 
         durationIntegerArray = getResources().getIntArray(R.array.duration_integer_array);
         initToolbar();
         initComponent();
+
+        tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+
+        if(tokenManager.getToken() == null){
+            startActivity(new Intent(AddNewTeacherFreeTimeActivity.this, LoginActivity.class));
+            finish();
+        }
+
+        service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
@@ -279,7 +310,7 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
         dialogDatePickerLight();
     }
 
-    @OnClick(R.id.tv_time_end)
+    @OnClick(R.id.tv_time_start)
     void clickTextViewTimeStudy() {
         dialogTimePickerLight();
     }
@@ -315,23 +346,80 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
             calendar.setTimeInMillis(choosenDateMillis);
             calendar.add(Calendar.HOUR_OF_DAY, choosenHourStart);
             calendar.add(Calendar.MINUTE, choosenMinuteStart);
-            Date dateStart = calendar.getTime();
+            dateStart = calendar.getTime();
             calendar.setTimeInMillis(choosenDateMillis);
             calendar.add(Calendar.HOUR_OF_DAY, choosenHourEnd);
             calendar.add(Calendar.MINUTE, choosenMinuteEnd);
-            Date dateEnd = calendar.getTime();
-            Gson gson = new Gson();
+            dateEnd = calendar.getTime();
 
-            Intent intent = new Intent(AddNewTeacherFreeTimeActivity.this, ListEventSearchActivity.class);
-            intent.putExtra("start_time", gson.toJson(dateStart));
-            intent.putExtra("end_time", gson.toJson(dateEnd));
-            intent.putExtra("latitude", latitude);
-            intent.putExtra("longitude", longitude);
-            intent.putExtra("event_type", type);
-            intent.putExtra("short_place_name", "" + textViewDestination.getText());
-
-            startActivity(intent);
+            sendRequest();
         }
+    }
+
+    void sendRequest() {
+        progressDialog.setMessage("Silahkan tunggu...");
+        progressDialog.show();
+
+        call = service.createTeacherFreeTime(latitude, longitude, Tools.convertDateToDateTimeMySQL(dateStart), Tools.convertDateToDateTimeMySQL(dateEnd), String.valueOf(textViewDestination.getText()));
+        call.enqueue(new Callback<CreateResponse>() {
+            @Override
+            public void onResponse(Call<CreateResponse> call, Response<CreateResponse> response) {
+                Log.w(TAG, "onResponse: " + response );
+
+                if(response.isSuccessful()){
+                    if(response.code() == 204) {
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                        showSuccessDialog("Berhasil mengirim permintaan jadwal ke calon guru! Anda akan dikirimkan notifikasi ketika guru anda sudah menerima permintaan jadwal anda");
+                    }
+                }else {
+                    tokenManager.deleteToken();
+                    startActivity(new Intent(AddNewTeacherFreeTimeActivity.this, LoginActivity.class));
+                    finish();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CreateResponse> call, Throwable t) {
+                Log.w(TAG, "onFailure: " + t.getMessage() );
+            }
+        });
+    }
+
+    private void showSuccessDialog(String message) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        View dialogView = inflater.inflate(R.layout.dialog_info, null);
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(dialogView);
+        dialog.setCancelable(true);
+
+        TextView txtContent = (TextView) dialogView.findViewById(R.id.content);
+        txtContent.setText(message);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        ((AppCompatButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+                Intent intent = new Intent(AddNewTeacherFreeTimeActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
     }
 
     @Override

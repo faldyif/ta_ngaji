@@ -67,5 +67,7 @@ public interface ApiService {
     // Teacher Only
     @GET("v1/teacher/freetime")
     Call<TeacherFreeTimeResponse> indexTeacherFreeTime();
-
+    @POST("v1/teacher/freetime")
+    @FormUrlEncoded
+    Call<CreateResponse> createTeacherFreeTime(@Field("latitude") Double latitude, @Field("longitude") Double longitude, @Field("time_start") String timeStart, @Field("time_end") String timeEnd, @Field("short_place_name") String shortPlaceName);
 }

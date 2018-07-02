@@ -132,7 +132,7 @@ public class DetailTeacherFreeTimeActivity extends AppCompatActivity {
 
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Detail Guru");
@@ -140,8 +140,8 @@ public class DetailTeacherFreeTimeActivity extends AppCompatActivity {
     }
 
     private void initComponent() {
-        final CircularImageView image = (CircularImageView) findViewById(R.id.image);
-        final CollapsingToolbarLayout collapsing_toolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        final CircularImageView image = findViewById(R.id.image);
+        final CollapsingToolbarLayout collapsing_toolbar = findViewById(R.id.collapsing_toolbar);
         ((AppBarLayout) findViewById(R.id.app_bar_layout)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -273,7 +273,7 @@ public class DetailTeacherFreeTimeActivity extends AppCompatActivity {
         dialog.setContentView(dialogView);
         dialog.setCancelable(true);
 
-        TextView txtContent = (TextView) dialogView.findViewById(R.id.content);
+        TextView txtContent = dialogView.findViewById(R.id.content);
         txtContent.setText(message);
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -281,7 +281,7 @@ public class DetailTeacherFreeTimeActivity extends AppCompatActivity {
         lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
-        ((AppCompatButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.bt_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
