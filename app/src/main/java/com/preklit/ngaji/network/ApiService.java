@@ -70,4 +70,16 @@ public interface ApiService {
     @POST("v1/teacher/freetime")
     @FormUrlEncoded
     Call<CreateResponse> createTeacherFreeTime(@Field("latitude") Double latitude, @Field("longitude") Double longitude, @Field("time_start") String timeStart, @Field("time_end") String timeEnd, @Field("short_place_name") String shortPlaceName);
+    @GET("v1/teacher/list/event/unconfirmed")
+    Call<EventsResponse> listEventUnconfirmed();
+    @GET("v1/teacher/list/event/unconfirmed/count")
+    Call<Integer> countEventUnconfirmed();
+    @GET("v1/teacher/list/event/confirmed")
+    Call<EventsResponse> listEventConfirmed();
+
+    @POST("v1/teacher/update/event/status")
+    @FormUrlEncoded
+    Call<CreateResponse> updateEventStatus(@Field("event_id") Integer eventId, @Field("status") Integer status);
+
 }
+

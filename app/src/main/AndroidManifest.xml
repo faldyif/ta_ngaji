@@ -60,6 +60,10 @@
         <!--TEACHER ACTIVITY-->
         <activity android:name=".activity.teacher.ListTeacherFreeTimeActivity" />
         <activity android:name=".activity.teacher.AddNewTeacherFreeTimeActivity" />
+        <activity android:name=".activity.teacher.ListUpcomingEventActivity" />
+        <activity android:name=".activity.teacher.ListPengajuanEventActivity" />
+        <activity android:name=".activity.teacher.DetailEventActivity" />
+        <activity android:name=".activity.teacher.RequestEventModificationActivity" />
     </application>
 
 </manifest>

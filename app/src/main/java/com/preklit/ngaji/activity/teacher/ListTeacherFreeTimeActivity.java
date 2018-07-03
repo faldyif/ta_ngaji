@@ -29,6 +29,7 @@ import com.preklit.ngaji.widget.LineItemDecoration;
 import com.preklit.ngaji.widget.RecyclerViewEmptySupport;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -137,35 +138,6 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private static final String[] ANIMATION_TYPE = new String[]{
-            "Bottom Up", "Fade In", "Left to Right", "Right to Left"
-    };
-
-//    private void showSingleChoiceDialog() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("Animation Type");
-//        builder.setCancelable(false);
-//        builder.setSingleChoiceItems(ANIMATION_TYPE, -1, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                String selected = ANIMATION_TYPE[i];
-//                if (selected.equalsIgnoreCase("Bottom Up")) {
-//                    animation_type = ItemAnimation.BOTTOM_UP;
-//                } else if (selected.equalsIgnoreCase("Fade In")) {
-//                    animation_type = ItemAnimation.FADE_IN;
-//                } else if (selected.equalsIgnoreCase("Left to Right")) {
-//                    animation_type = ItemAnimation.LEFT_RIGHT;
-//                } else if (selected.equalsIgnoreCase("Right to Left")) {
-//                    animation_type = ItemAnimation.RIGHT_LEFT;
-//                }
-//                getSupportActionBar().setTitle(selected);
-//                setAdapter();
-//                dialogInterface.dismiss();
-//            }
-//        });
-//        builder.show();
-//    }
-
     void getTeacherFreeTimeData(){
         final LinearLayout lyt_progress = findViewById(R.id.lyt_progress);
         lyt_progress.setVisibility(View.VISIBLE);
@@ -215,6 +187,15 @@ public class ListTeacherFreeTimeActivity extends AppCompatActivity {
     @OnClick(R.id.fab_add)
     void fabAdd() {
         Intent intent = new Intent(ListTeacherFreeTimeActivity.this, AddNewTeacherFreeTimeActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 123);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 123) {
+            items = Collections.emptyList();
+            getTeacherFreeTimeData();
+        }
     }
 }

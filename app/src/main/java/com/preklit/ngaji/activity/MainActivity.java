@@ -17,10 +17,13 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
+import com.nex3z.notificationbadge.NotificationBadge;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.TokenManager;
 import com.preklit.ngaji.UserManager;
+import com.preklit.ngaji.activity.teacher.ListPengajuanEventActivity;
 import com.preklit.ngaji.activity.teacher.ListTeacherFreeTimeActivity;
+import com.preklit.ngaji.activity.teacher.ListUpcomingEventActivity;
 import com.preklit.ngaji.entities.SelfUserDetail;
 import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
 import com.preklit.ngaji.network.ApiService;
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private UserManager userManager;
     private ApiService service;
     private ProgressDialog progressDialog;
+    private int mPengajuanGuruCount = 0;
+    NotificationBadge teacherPengajuanBadge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         progressDialog = new ProgressDialog(this);
+
+        teacherPengajuanBadge = findViewById(R.id.teacher_pengajuan_badge);
+        teacherPengajuanBadge.setText("...");
 
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
         if(tokenManager.getToken() == null){
@@ -72,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             toolbar.setTitle("Halo, " + userManager.getUserDetail().getName());
             initTeacherMenu();
+            if(userManager.getUserDetail().getRole().equals("teacher")) {
+                getCountUnconfirmed();
+            }
         }
     }
 
@@ -145,6 +156,26 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @OnClick(R.id.menu_guru_upcoming)
+    void openMenuGuruUpcoming() {
+        Intent intent = new Intent(MainActivity.this, ListUpcomingEventActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.menu_guru_pengajuan)
+    void openMenuGuruPengajuan() {
+        Intent intent = new Intent(MainActivity.this, ListPengajuanEventActivity.class);
+        startActivityForResult(intent, 123);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 123) {
+            getCountUnconfirmed();
+        }
+    }
+
     void getSelfUserData(){
         Call<SelfUserDetail> call = service.refreshSelfUserDetail();
         call.enqueue(new Callback<SelfUserDetail>() {
@@ -157,6 +188,9 @@ public class MainActivity extends AppCompatActivity {
                     userManager.saveUser(response.body());
                     toolbar.setTitle("Halo, " + userManager.getUserDetail().getName());
                     initTeacherMenu();
+                    if(userManager.getUserDetail().getRole().equals("teacher")) {
+                        getCountUnconfirmed();
+                    }
                 }else {
                     Toast.makeText(MainActivity.this, "Kok gagal", Toast.LENGTH_SHORT).show();
                 }
@@ -164,6 +198,31 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SelfUserDetail> call, Throwable t) {
+                Log.w(TAG, "onFailure: " + t.getMessage() );
+            }
+        });
+
+    }
+
+    void getCountUnconfirmed(){
+        Call<Integer> call = service.countEventUnconfirmed();
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                Log.w(TAG, "onResponse: " + response );
+
+                if(response.isSuccessful()){
+                    Log.w(TAG, "onResponse: " + response.body());
+                    mPengajuanGuruCount = response.body();
+                    teacherPengajuanBadge.setNumber(mPengajuanGuruCount);
+                    initTeacherMenu();
+                }else {
+                    Toast.makeText(MainActivity.this, "Kok gagal", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
                 Log.w(TAG, "onFailure: " + t.getMessage() );
             }
         });

@@ -351,6 +351,8 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
             calendar.add(Calendar.HOUR_OF_DAY, choosenHourEnd);
             calendar.add(Calendar.MINUTE, choosenMinuteEnd);
             dateEnd = calendar.getTime();
+            Log.w(TAG, "submitSearch: " + dateStart + " " + dateEnd);
+            Log.w(TAG, "submitSearch2: " + choosenHourStart + ":" + choosenMinuteStart + " " + choosenHourEnd + ":" + choosenMinuteEnd);
 
             sendRequest();
         }
@@ -371,7 +373,7 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
-                        showSuccessDialog("Berhasil mengirim permintaan jadwal ke calon guru! Anda akan dikirimkan notifikasi ketika guru anda sudah menerima permintaan jadwal anda");
+                        showSuccessDialog("Berhasil membuat entri waktu luang baru!");
                     }
                 }else {
                     tokenManager.deleteToken();
@@ -400,6 +402,8 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
 
         TextView txtContent = (TextView) dialogView.findViewById(R.id.content);
         txtContent.setText(message);
+        AppCompatButton btnClose = dialogView.findViewById(R.id.bt_close);
+        btnClose.setText("Kembali");
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialog.getWindow().getAttributes());

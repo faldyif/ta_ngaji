@@ -161,6 +161,7 @@ public class DetailTeacherFreeTimeActivity extends AppCompatActivity {
         textViewTimeInfo.setText(timeFormat.format(dateStart) + " - " + timeFormat.format(dateEnd));
         textViewRank.setText(teacherFreeTime.getTeacherRankDescription());
         textViewEventType.setText("Kelas " + eventType.substring(0, 1).toUpperCase() + eventType.substring(1));
+        Log.d(TAG, "initComponent: " + teacherFreeTime.getTeacherRankMedalColor() + " " + teacherFreeTime.getTeacherRank());
         imageViewRank.setColorFilter(ContextCompat.getColor(this, teacherFreeTime.getTeacherRankMedalColor()), android.graphics.PorterDuff.Mode.SRC_IN);
         textViewLocationDescription.setText(locationDetails);
 

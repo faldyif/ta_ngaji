@@ -689,20 +689,59 @@
                                 app:elevation="0dp"
                                 app:fabSize="mini"
                                 app:rippleColor="@android:color/white"
-                                app:srcCompat="@drawable/ic_event" />
+                                app:srcCompat="@drawable/calendar_multiple_check" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/spacing_medium"
-                                android:text="JADWAL"
+                                android:text="LUANG"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textColor="@color/grey_40" />
 
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/menu_guru_daftar_santri"
+                            android:id="@+id/menu_guru_pengajuan"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:tint="@android:color/white"
+                                app:backgroundTint="@color/blue_500"
+                                app:elevation="0dp"
+                                app:fabSize="mini"
+                                app:rippleColor="@android:color/white"
+                                app:srcCompat="@drawable/ic_person_add" />
+
+
+                            <com.nex3z.notificationbadge.NotificationBadge
+                                android:id="@+id/teacher_pengajuan_badge"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_toRightOf="@id/icon"
+                                android:layout_alignTop="@id/icon"
+                                android:layout_marginLeft="12dp"
+                                android:layout_marginTop="-20dp"
+                                app:nbMaxTextLength="2"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-4dp"
+                                android:text="PENGAJUAN"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                                android:textColor="@color/grey_40" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/menu_guru_upcoming"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -717,13 +756,13 @@
                                 app:elevation="0dp"
                                 app:fabSize="mini"
                                 app:rippleColor="@android:color/white"
-                                app:srcCompat="@drawable/ic_peoples" />
+                                app:srcCompat="@drawable/ic_calendar_clock" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/spacing_medium"
-                                android:text="SANTRI"
+                                android:text="AKAN DATANG"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textColor="@color/grey_40" />
                         </LinearLayout>
@@ -755,6 +794,19 @@
                                 android:textColor="@color/grey_40" />
                         </LinearLayout>
 
+                    </LinearLayout>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/spacing_mlarge" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
 
                         <LinearLayout
                             android:id="@+id/menu_guru_profil"
@@ -781,47 +833,6 @@
                                 android:text="PENDAPATAN"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textColor="@color/grey_40" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/spacing_mlarge" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:id="@+id/menu_guru_pengajuan"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <android.support.design.widget.FloatingActionButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:tint="@android:color/white"
-                                app:backgroundTint="@color/blue_500"
-                                app:elevation="0dp"
-                                app:fabSize="mini"
-                                app:rippleColor="@android:color/white"
-                                app:srcCompat="@drawable/ic_person_add" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_medium"
-                                android:text="PENGAJUAN"
-                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                                android:textColor="@color/grey_40" />
-
                         </LinearLayout>
 
                         <LinearLayout
