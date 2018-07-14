@@ -66,16 +66,16 @@
                     android:textColor="@color/grey_90"
                     android:textStyle="bold" />
 
-                <android.support.v7.widget.AppCompatRatingBar
-                    style="@style/Yellow.Small.AppCompatRatingBar"
-                    android:id="@+id/rating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:numStars="5"
-                    android:rating="4.5"
-                    android:stepSize="0.5"
-                    android:theme="@style/Yellow.Small.AppCompatRatingBar" />
+                <!--<android.support.v7.widget.AppCompatRatingBar-->
+                    <!--style="@style/Yellow.Small.AppCompatRatingBar"-->
+                    <!--android:id="@+id/rating"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:clickable="false"-->
+                    <!--android:numStars="5"-->
+                    <!--android:rating="4.5"-->
+                    <!--android:stepSize="0.5"-->
+                    <!--android:theme="@style/Yellow.Small.AppCompatRatingBar" />-->
 
                 <TextView
                     android:id="@+id/distance"
@@ -99,7 +99,7 @@
                 android:layout_alignParentEnd="true"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:paddingTop="35dp"
+                android:paddingTop="25dp"
                 android:text="50 points"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/grey_90"

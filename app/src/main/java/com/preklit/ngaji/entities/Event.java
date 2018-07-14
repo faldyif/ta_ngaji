@@ -39,6 +39,10 @@ public class Event {
     UserPrivate teacher;
     @Json(name = "student")
     UserPrivate student;
+    @Json(name = "event_modification_request")
+    EventModificationRequest eventModificationRequest;
+    @Json(name = "presence")
+    AttendeeLog presence;
 
     public Event() {
     }
@@ -173,5 +177,21 @@ public class Event {
                 break;
         }
         return 0;
+    }
+
+    public EventModificationRequest getEventModificationRequest() {
+        return eventModificationRequest;
+    }
+
+    public void setEventModificationRequest(EventModificationRequest eventModificationRequest) {
+        this.eventModificationRequest = eventModificationRequest;
+    }
+
+    public AttendeeLog getPresence() {
+        return presence;
+    }
+
+    public void setPresence(AttendeeLog presence) {
+        this.presence = presence;
     }
 }

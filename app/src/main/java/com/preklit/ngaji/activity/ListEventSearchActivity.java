@@ -12,10 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.TokenManager;
+import com.preklit.ngaji.UserManager;
 import com.preklit.ngaji.adapter.ListTeacherFreeTimeAdapter;
 import com.preklit.ngaji.entities.TeacherFreeTime;
 import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
@@ -48,6 +50,7 @@ public class ListEventSearchActivity extends AppCompatActivity {
     private TokenManager tokenManager;
     private ApiService service;
     private RelativeLayout noItem;
+    private TextView textViewSaldoPoin;
 
     private double latitude;
     private double longitude;
@@ -56,6 +59,7 @@ public class ListEventSearchActivity extends AppCompatActivity {
     private String eventType;
     private Gson gson;
     private Intent myIntent;
+    private UserManager userManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,8 @@ public class ListEventSearchActivity extends AppCompatActivity {
         dateEnd = gson.fromJson(myIntent.getStringExtra("end_time"), Date.class);
         eventType = myIntent.getStringExtra("event_type");
 
+        Log.d(TAG, "onCreate: " + dateStart + " " + dateEnd);
+
         ButterKnife.bind(this);
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
 
@@ -89,18 +95,28 @@ public class ListEventSearchActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Daftar Guru");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    public void getUserManager() {
+        userManager = UserManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
+        if(userManager.getUserDetail() != null) {
+            textViewSaldoPoin = findViewById(R.id.tv_saldo_poin);
+            textViewSaldoPoin.setText("Saldo poin: " + userManager.getUserDetail().getLoyaltyPoints() + " NgajiPoin");
+        }
+    }
+
     private void initComponent() {
-        noItem = (RelativeLayout) findViewById(R.id.no_result);
+        getUserManager();
+
+        noItem = findViewById(R.id.no_result);
         noItem.setVisibility(View.GONE);
 
-        recyclerView = (RecyclerViewEmptySupport) findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new LineItemDecoration(this, LinearLayout.VERTICAL));
@@ -195,7 +211,7 @@ public class ListEventSearchActivity extends AppCompatActivity {
 //    }
 
     void getTeacherFreeTimeData(){
-        final LinearLayout lyt_progress = (LinearLayout) findViewById(R.id.lyt_progress);
+        final LinearLayout lyt_progress = findViewById(R.id.lyt_progress);
         lyt_progress.setVisibility(View.VISIBLE);
         lyt_progress.setAlpha(1.0f);
         recyclerView.setVisibility(View.GONE);

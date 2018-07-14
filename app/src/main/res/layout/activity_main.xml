@@ -33,57 +33,11 @@
 
     </RelativeLayout>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginBottom="@dimen/spacing_medium"
-        android:layout_marginLeft="@dimen/spacing_middle"
-        android:layout_marginRight="@dimen/spacing_middle"
-        android:layout_marginTop="-30dp"
-        android:clipToPadding="false"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:layout_width="?attr/actionBarSize"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@android:color/transparent"
-                android:clickable="true"
-                android:tint="@color/grey_60"
-                app:srcCompat="@drawable/ic_search" />
-
-            <EditText
-                android:id="@+id/et_search"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:hint="Cari sesuatu"
-                android:imeOptions="actionSearch"
-                android:maxLines="1"
-                android:editable="false"
-                android:singleLine="true">
-
-            </EditText>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="-36dp"
+        android:layout_marginTop="-70dp"
         android:scrollbars="none"
         android:scrollingCache="true">
 
@@ -97,122 +51,13 @@
                 android:layout_width="0dp"
                 android:layout_height="35dp" />
 
+            <LinearLayout
+                android:id="@+id/reminder_lyt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"></LinearLayout>
+
             <!--START REMINDER VIEW-->
-
-            <!--<android.support.v7.widget.CardView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="@dimen/spacing_medium"-->
-                <!--android:layout_marginLeft="@dimen/spacing_middle"-->
-                <!--android:layout_marginRight="@dimen/spacing_middle"-->
-                <!--android:layout_marginTop="@dimen/spacing_medium"-->
-                <!--android:visibility="visible"-->
-                <!--app:cardCornerRadius="2dp"-->
-                <!--app:cardElevation="2dp">-->
-
-                <!--<LinearLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:orientation="vertical">-->
-
-
-                <!--<LinearLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:orientation="horizontal"-->
-                    <!--android:padding="@dimen/spacing_large">-->
-
-                    <!--<com.mikhaellopez.circularimageview.CircularImageView-->
-                        <!--android:layout_width="@dimen/spacing_xxlarge"-->
-                        <!--android:layout_height="@dimen/spacing_xxlarge"-->
-                        <!--android:src="@drawable/photo_male_2"-->
-                        <!--app:civ_border="false" />-->
-
-                    <!--<View-->
-                        <!--android:layout_width="@dimen/spacing_large"-->
-                        <!--android:layout_height="0dp" />-->
-
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:orientation="vertical">-->
-
-                        <!--<TextView-->
-                            <!--android:drawableLeft="@drawable/ic_medal"-->
-                            <!--android:drawableTint="@color/medal_bronze"-->
-                            <!--android:drawablePadding="2dp"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:gravity="center_vertical"-->
-                            <!--android:text="Ustadz Farhan Najib"-->
-                            <!--android:textAppearance="@style/TextAppearance.AppCompat.Subhead"-->
-                            <!--android:textColor="@android:color/black" />-->
-
-                        <!--<TextView-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_marginTop="@dimen/spacing_small"-->
-                            <!--android:gravity="center_vertical"-->
-                            <!--android:text="Hari ini, 20:30 - 21:30"-->
-                            <!--android:textAppearance="@style/TextAppearance.AppCompat.Subhead"-->
-                            <!--android:textColor="@color/grey_60" />-->
-
-                    <!--</LinearLayout>-->
-
-                <!--</LinearLayout>-->
-
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginLeft="@dimen/spacing_large"-->
-                        <!--android:layout_marginRight="@dimen/spacing_large"-->
-                        <!--android:text="Belajar Tahsin Bab 2"-->
-                        <!--android:textAppearance="@style/TextAppearance.AppCompat.Subhead"-->
-                        <!--android:textColor="@color/grey_60" />-->
-
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginLeft="@dimen/spacing_large"-->
-                        <!--android:layout_marginRight="@dimen/spacing_large"-->
-                        <!--android:text="Di Masjid Al-Ashri"-->
-                        <!--android:textAppearance="@style/TextAppearance.AppCompat.Subhead"-->
-                        <!--android:textColor="@color/grey_60" />-->
-
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginBottom="@dimen/spacing_large"-->
-                        <!--android:layout_marginLeft="@dimen/spacing_large"-->
-                        <!--android:layout_marginRight="@dimen/spacing_large"-->
-                        <!--android:text="2 jam yang akan mendatang"-->
-                        <!--android:textAppearance="@style/TextAppearance.AppCompat.Subhead"-->
-                        <!--android:textColor="@color/grey_60" />-->
-
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:orientation="horizontal">-->
-
-                        <!--<Button-->
-                            <!--style="@style/Button.Accent.Borderless"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:gravity="center"-->
-                            <!--android:text="PETA" />-->
-
-                        <!--<Button-->
-                            <!--style="@style/Button.Accent.Borderless"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:gravity="center"-->
-                            <!--android:text="PRESENSI" />-->
-
-                    <!--</LinearLayout>-->
-
-                <!--</LinearLayout>-->
-            <!--</android.support.v7.widget.CardView>-->
-
 
             <!--<android.support.v7.widget.CardView-->
                 <!--android:layout_width="match_parent"-->
@@ -438,30 +283,11 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/menu_tadabbur"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:orientation="vertical">
-
-                            <android.support.design.widget.FloatingActionButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:tint="@android:color/white"
-                                app:backgroundTint="@color/orange_300"
-                                app:elevation="0dp"
-                                app:fabSize="mini"
-                                app:rippleColor="@android:color/white"
-                                app:srcCompat="@drawable/ic_book_open_page_variant" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_medium"
-                                android:text="TADABBUR"
-                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                                android:textColor="@color/grey_40" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -473,7 +299,6 @@
                         </LinearLayout>
 
                     </LinearLayout>
-
 
                     <View
                         android:layout_width="match_parent"
@@ -493,7 +318,6 @@
                 android:visibility="visible"
                 app:cardCornerRadius="4dp"
                 app:cardElevation="2dp">
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -591,6 +415,44 @@
                                 android:textColor="@color/grey_40" />
 
                         </LinearLayout>
+
+                        <!--<LinearLayout-->
+                            <!--android:id="@+id/menu_santri_modreq"-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="1"-->
+                            <!--android:gravity="center"-->
+                            <!--android:orientation="vertical">-->
+
+                            <!--<android.support.design.widget.FloatingActionButton-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:tint="@android:color/white"-->
+                                <!--app:backgroundTint="@color/blue_400"-->
+                                <!--app:elevation="0dp"-->
+                                <!--app:fabSize="mini"-->
+                                <!--app:rippleColor="@android:color/white"-->
+                                <!--app:srcCompat="@drawable/ic_event_edit" />-->
+
+
+                            <!--<com.nex3z.notificationbadge.NotificationBadge-->
+                                <!--android:id="@+id/student_modreq_badge"-->
+                                <!--android:layout_width="28dp"-->
+                                <!--android:layout_height="28dp"-->
+                                <!--android:layout_toRightOf="@id/icon"-->
+                                <!--android:layout_alignTop="@id/icon"-->
+                                <!--android:layout_marginLeft="12dp"-->
+                                <!--android:layout_marginTop="-20dp"-->
+                                <!--app:nbMaxTextLength="2"/>-->
+
+                            <!--<TextView-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_marginTop="-4dp"-->
+                                <!--android:text="SUNTINGAN"-->
+                                <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"-->
+                                <!--android:textColor="@color/grey_40" />-->
+                        <!--</LinearLayout>-->
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -762,94 +624,49 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/spacing_medium"
-                                android:text="AKAN DATANG"
+                                android:text="JADWAL"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textColor="@color/grey_40" />
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:id="@+id/menu_guru_riwayat"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
+                        <!--<LinearLayout-->
+                            <!--android:id="@+id/menu_guru_modreq"-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="1"-->
+                            <!--android:gravity="center"-->
+                            <!--android:orientation="vertical">-->
 
-                            <android.support.design.widget.FloatingActionButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:tint="@android:color/white"
-                                app:backgroundTint="@color/blue_400"
-                                app:elevation="0dp"
-                                app:fabSize="mini"
-                                app:rippleColor="@android:color/white"
-                                app:srcCompat="@drawable/ic_history" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_medium"
-                                android:text="RIWAYAT"
-                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                                android:textColor="@color/grey_40" />
-                        </LinearLayout>
-
-                    </LinearLayout>
+                            <!--<android.support.design.widget.FloatingActionButton-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:tint="@android:color/white"-->
+                                <!--app:backgroundTint="@color/blue_400"-->
+                                <!--app:elevation="0dp"-->
+                                <!--app:fabSize="mini"-->
+                                <!--app:rippleColor="@android:color/white"-->
+                                <!--app:srcCompat="@drawable/ic_event_edit" />-->
 
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/spacing_mlarge" />
+                            <!--<com.nex3z.notificationbadge.NotificationBadge-->
+                                <!--android:id="@+id/teacher_modreq_badge"-->
+                                <!--android:layout_width="28dp"-->
+                                <!--android:layout_height="28dp"-->
+                                <!--android:layout_toRightOf="@id/icon"-->
+                                <!--android:layout_alignTop="@id/icon"-->
+                                <!--android:layout_marginLeft="12dp"-->
+                                <!--android:layout_marginTop="-20dp"-->
+                                <!--app:nbMaxTextLength="2"/>-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:orientation="horizontal">
+                            <!--<TextView-->
+                                <!--android:layout_width="  wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_marginTop="-4dp"-->
+                                <!--android:text="SUNTINGAN"-->
+                                <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"-->
+                                <!--android:textColor="@color/grey_40" />-->
+                        <!--</LinearLayout>-->
 
-
-                        <LinearLayout
-                            android:id="@+id/menu_guru_profil"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <android.support.design.widget.FloatingActionButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:tint="@android:color/white"
-                                app:backgroundTint="@color/yellow_600"
-                                app:elevation="0dp"
-                                app:fabSize="mini"
-                                app:rippleColor="@android:color/white"
-                                app:srcCompat="@drawable/ic_coins" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/spacing_medium"
-                                android:text="PENDAPATAN"
-                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                                android:textColor="@color/grey_40" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
-                        </LinearLayout>
 
 
                         <LinearLayout
@@ -894,40 +711,109 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Saldo"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                            android:textColor="@color/grey_60" />
 
-                        <TextView
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.mikhaellopez.circularimageview.CircularImageView
+                                android:id="@+id/photo_round"
+                                android:layout_width="@dimen/spacing_xxlarge"
+                                android:layout_height="@dimen/spacing_xxlarge"
+                                android:src="@drawable/photo_male_2"
+                                app:civ_border="false" />
+
+                            <View
+                                android:layout_width="@dimen/spacing_large"
+                                android:layout_height="0dp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tv_nama_pengguna"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:text="Ustadz Farhan Najib"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                                    android:textColor="@android:color/black" />
+
+                                <TextView
+                                    android:id="@+id/tv_phone_number"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/spacing_small"
+                                    android:gravity="center_vertical"
+                                    android:text="+62xxxx"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                                    android:textColor="@color/grey_60" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/btn_edit_profile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Rp 240.000"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/green_400"
-                            android:textStyle="bold" />
+                            android:text="Edit Profil"
+                            android:theme="@style/Button.Accent" />
 
                     </LinearLayout>
 
-                    <RelativeLayout
+                    <LinearLayout
+                        android:orientation="vertical"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/shape_rounded_orange"
-                        android:paddingBottom="@dimen/spacing_small"
-                        android:paddingLeft="@dimen/spacing_xmedium"
-                        android:paddingRight="@dimen/spacing_xmedium"
-                        android:paddingTop="@dimen/spacing_small">
+                        android:layout_height="wrap_content">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="4150 NgajiPoints"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                            android:textColor="@android:color/white" />
+                            android:background="@drawable/shape_rounded_orange"
+                            android:paddingBottom="@dimen/spacing_small"
+                            android:paddingLeft="@dimen/spacing_xmedium"
+                            android:paddingRight="@dimen/spacing_xmedium"
+                            android:paddingTop="@dimen/spacing_small">
 
-                    </RelativeLayout>
+                            <TextView
+                                android:id="@+id/tv_ngajipoints"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0 NgajiPoints"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                                android:textColor="@android:color/white" />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_rounded_orange"
+                            android:paddingBottom="@dimen/spacing_small"
+                            android:paddingLeft="@dimen/spacing_xmedium"
+                            android:paddingRight="@dimen/spacing_xmedium"
+                            android:layout_marginTop="@dimen/spacing_small">
+
+                            <TextView
+                                android:id="@+id/tv_saldo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Rp 0"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                                android:textColor="@android:color/white" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

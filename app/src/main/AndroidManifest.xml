@@ -3,6 +3,11 @@
     package="com.preklit.ngaji">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -57,13 +62,19 @@
             </intent-filter>
         </service>
 
-        <!--TEACHER ACTIVITY-->
+        <!-- TEACHER ACTIVITY -->
         <activity android:name=".activity.teacher.ListTeacherFreeTimeActivity" />
         <activity android:name=".activity.teacher.AddNewTeacherFreeTimeActivity" />
         <activity android:name=".activity.teacher.ListUpcomingEventActivity" />
         <activity android:name=".activity.teacher.ListPengajuanEventActivity" />
         <activity android:name=".activity.teacher.DetailEventActivity" />
         <activity android:name=".activity.teacher.RequestEventModificationActivity" />
+        <activity android:name=".activity.teacher.ReviewEventModificationRequestActivity" />
+        <activity android:name=".activity.RequestEventModificationActivity" />
+        <activity android:name=".activity.ReviewEventModificationRequestActivity" />
+        <activity android:name=".activity.PresenceActivity" />
+        <activity android:name=".activity.teacher.PresenceActivity" />
+        <activity android:name=".activity.EditProfileActivity"></activity>
     </application>
 
 </manifest>

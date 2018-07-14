@@ -84,7 +84,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Daftar");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -218,7 +218,7 @@ public class SignUpActivity extends AppCompatActivity {
         dialog.setContentView(dialogView);
         dialog.setCancelable(true);
 
-        TextView txtContent = (TextView) dialogView.findViewById(R.id.content);
+        TextView txtContent = dialogView.findViewById(R.id.content);
         txtContent.setText(message);
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -226,7 +226,7 @@ public class SignUpActivity extends AppCompatActivity {
         lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
-        ((AppCompatButton) dialog.findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.bt_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -86,6 +87,9 @@ public class DetailEventStudentActivity extends AppCompatActivity {
     @BindView(R.id.location_description)
     TextView textViewLocationDescription;
 
+    @BindView(R.id.btn_change_request)
+    Button buttonChangeRequest;
+
     SupportMapFragment mapFragment;
     Event event;
     GoogleMap mMap;
@@ -143,7 +147,14 @@ public class DetailEventStudentActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_change_request)
     void changeRequest() {
-        Toast.makeText(ctx, "Change request clicked", Toast.LENGTH_SHORT).show();
+        Intent intent = null;
+        if(event.getEventModificationRequest() != null) {
+            intent = new Intent(DetailEventStudentActivity.this, ReviewEventModificationRequestActivity.class);
+        } else {
+            intent = new Intent(DetailEventStudentActivity.this, RequestEventModificationActivity.class);
+        }
+        intent.putExtra("event", gson.toJson(event));
+        startActivity(intent);
     }
 
     private void initComponent() {
@@ -158,6 +169,18 @@ public class DetailEventStudentActivity extends AppCompatActivity {
                 image.setScaleY(scale >= 0 ? scale : 0);
             }
         });
+
+
+        if(event.getEventModificationRequest() != null) {
+            if(event.getEventModificationRequest().getRequestByTeacher() == 0) {
+                buttonChangeRequest.setText("Menunggu Persetujuan");
+                buttonChangeRequest.setEnabled(false);
+                buttonChangeRequest.setBackgroundColor(Color.GRAY);
+                buttonChangeRequest.setTextColor(Color.BLACK);
+            } else {
+                buttonChangeRequest.setText("Respon Permintaan");
+            }
+        }
 
         // Initialize date formats
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("in", "id-ID"));

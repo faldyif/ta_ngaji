@@ -56,7 +56,7 @@ public class ListTeacherFreeTimeAdapter extends RecyclerView.Adapter<RecyclerVie
         public TextView distance;
         public TextView points;
         public View lyt_parent;
-        public AppCompatRatingBar ratingBar;
+//        public AppCompatRatingBar ratingBar;
         public MaterialRippleLayout parentLayout;
 
         public OriginalViewHolder(View v) {
@@ -66,7 +66,7 @@ public class ListTeacherFreeTimeAdapter extends RecyclerView.Adapter<RecyclerVie
             distance = (TextView) v.findViewById(R.id.distance);
             points = (TextView) v.findViewById(R.id.points);
             lyt_parent = (View) v.findViewById(R.id.lyt_parent);
-            ratingBar = (AppCompatRatingBar) v.findViewById(R.id.rating);
+//            ratingBar = (AppCompatRatingBar) v.findViewById(R.id.rating);
             parentLayout = (MaterialRippleLayout) v.findViewById(R.id.parent_layout);
         }
     }

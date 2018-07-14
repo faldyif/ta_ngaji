@@ -1,8 +1,10 @@
 package com.preklit.ngaji.activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -73,6 +75,7 @@ public class IntroActivity extends AppCompatActivity {
                     // move to next screen
                     viewPager.setCurrentItem(current);
                 } else {
+                    dontShowIntroScreenAgain();
                     finish();
                 }
             }
@@ -81,6 +84,7 @@ public class IntroActivity extends AppCompatActivity {
         ((ImageButton)findViewById(R.id.bt_close)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dontShowIntroScreenAgain();
                 finish();
             }
         });
@@ -177,5 +181,12 @@ public class IntroActivity extends AppCompatActivity {
             View view = (View) object;
             container.removeView(view);
         }
+    }
+
+    public void dontShowIntroScreenAgain() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences( this);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putBoolean("introScreen", true);
+        edit.apply();
     }
 }

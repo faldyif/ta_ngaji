@@ -15,28 +15,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.TokenManager;
-import com.preklit.ngaji.activity.DetailTeacherFreeTimeActivity;
-import com.preklit.ngaji.activity.ListEventSearchActivity;
 import com.preklit.ngaji.activity.LoginActivity;
 import com.preklit.ngaji.activity.MainActivity;
 import com.preklit.ngaji.entities.CreateResponse;
+import com.preklit.ngaji.entities.Event;
 import com.preklit.ngaji.network.ApiService;
 import com.preklit.ngaji.network.RetrofitBuilder;
 import com.preklit.ngaji.utils.Tools;
@@ -58,32 +50,29 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
+public class RequestEventModificationActivity extends AppCompatActivity {
 
-    private static final String TAG = AddNewTeacherFreeTimeActivity.class.getSimpleName();
+    private static final String TAG = "RequestEventModi";
     private View parent_view;
-    private static final int PLACE_PICKER_REQUEST = 600;
 
-    public static Place choosenPlace;
     public static Long choosenDateMillis;
     public Integer choosenHourStart;
     public Integer choosenMinuteStart;
     public Integer choosenHourEnd;
     public Integer choosenMinuteEnd;
     int[] durationIntegerArray;
-    private LatLngBounds latLngBounds;
-    private double longitude;
-    private double latitude;
+    Event event;
     private String type;
+    private String reason;
 
     @BindView(R.id.tv_date)
     TextView textViewDate;
-    @BindView(R.id.tv_destination)
-    TextView textViewDestination;
     @BindView(R.id.tv_time_start)
     TextView textViewTimeStart;
     @BindView(R.id.tv_time_end)
     TextView textViewTimeEnd;
+    @BindView(R.id.et_reason)
+    EditText editTextReason;
 
     private Call<CreateResponse> call;
     private TokenManager tokenManager;
@@ -95,10 +84,41 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_teacher_free_time);
+        setContentView(R.layout.activity_request_event_modification_teacher);
         parent_view = findViewById(android.R.id.content);
         ButterKnife.bind(this);
         progressDialog = new ProgressDialog(this);
+
+        Gson gson = new Gson();
+        Intent intent = getIntent();
+        event = gson.fromJson(intent.getStringExtra("event"), Event.class);
+        dateStart = Tools.convertDateTimeMySQLStringToJavaDate(event.getStartTime());
+        dateEnd = Tools.convertDateTimeMySQLStringToJavaDate(event.getEndTime());
+
+        Calendar tempCalStart = Calendar.getInstance();
+        Calendar tempCalEnd = Calendar.getInstance();
+        Calendar tempCal = Calendar.getInstance();
+        tempCalStart.setTime(dateStart);
+        tempCalEnd.setTime(dateEnd);
+        tempCal.setTime(dateStart);
+
+        tempCal.add(Calendar.HOUR_OF_DAY, -tempCalStart.get(Calendar.HOUR_OF_DAY));
+        tempCal.add(Calendar.MINUTE, -tempCalStart.get(Calendar.MINUTE));
+        choosenDateMillis = tempCal.getTimeInMillis();
+        textViewDate.setText(Tools.getFormattedDateSimple(choosenDateMillis));
+
+        choosenHourStart = tempCalStart.get(Calendar.HOUR_OF_DAY);
+        choosenMinuteStart = tempCalStart.get(Calendar.MINUTE);
+        NumberFormat f = new DecimalFormat("00");
+        textViewTimeStart.setText(f.format(choosenHourStart) + " : " + f.format(choosenMinuteStart));
+
+        choosenHourEnd = tempCalEnd.get(Calendar.HOUR_OF_DAY);
+        choosenMinuteEnd = tempCalEnd.get(Calendar.MINUTE);
+        textViewTimeEnd.setText(f.format(choosenHourEnd) + " : " + f.format(choosenMinuteEnd));
+
+        Log.w(TAG, "onCreate: " + tempCal);
+        Log.w(TAG, "onCreate: " + tempCalStart);
+        Log.w(TAG, "onCreate: " + tempCalEnd);
 
         durationIntegerArray = getResources().getIntArray(R.array.duration_integer_array);
         initToolbar();
@@ -107,7 +127,7 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
 
         if(tokenManager.getToken() == null){
-            startActivity(new Intent(AddNewTeacherFreeTimeActivity.this, LoginActivity.class));
+            startActivity(new Intent(RequestEventModificationActivity.this, LoginActivity.class));
             finish();
         }
 
@@ -118,10 +138,9 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(null);
+        getSupportActionBar().setTitle("Buat Permintaan Penggantian Jadwal");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        Tools.setSystemBarColor(this, R.color.grey_90);
     }
 
     private void initComponent() {
@@ -164,7 +183,7 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
                         calendar.set(Calendar.YEAR, year);
                         calendar.set(Calendar.MONTH, monthOfYear);
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        calendar.set(Calendar.HOUR_OF_DAY, 0);
+                        calendar.set(Calendar.HOUR, 0);
                         calendar.set(Calendar.MINUTE, 0);
                         calendar.set(Calendar.SECOND, 0);
                         choosenDateMillis = calendar.getTimeInMillis();
@@ -250,43 +269,6 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                choosenPlace = PlacePicker.getPlace(this, data);
-                Log.w(TAG, "onActivityResult: " + choosenPlace.getPlaceTypes() + " --- " + choosenPlace.getAddress());
-                latLngBounds = choosenPlace.getViewport();
-                if(latLngBounds == null) {
-                    Snackbar.make(parent_view, "Tempat tidak lazim", Snackbar.LENGTH_SHORT).show();
-                    choosenPlace = null;
-                    return;
-                }
-                latitude = latLngBounds.getCenter().latitude;
-                longitude = latLngBounds.getCenter().longitude;
-
-                // Test reverse geocoding
-                List<Address> addresses = doReverseGeocoding(latitude, longitude);
-                Log.w(TAG, "onActivityResultAddress: " + addresses);
-                String featureName = "";
-                if(choosenPlace.getPlaceTypes().get(0) == 0) {
-                    Log.w(TAG, "onActivityResult: " + "Bukan tempat mbok");
-                    featureName = addresses.get(0).getFeatureName();
-                } else {
-                    featureName += choosenPlace.getName();
-                }
-                String combinedAddress = featureName + ", " + addresses.get(0).getLocality() + ", " + addresses.get(0).getSubAdminArea();
-
-//                ((TextView) findViewById(R.id.tv_destination)).setText(choosenPlace.getName());
-                textViewDestination.setText(combinedAddress);
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-                Snackbar.make(parent_view, status.toString(), Snackbar.LENGTH_SHORT).show();
-            }
-        }
-    }
-
     private List<Address> doReverseGeocoding(double latitude, double longitude) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List<Address> addresses = null;
@@ -298,11 +280,6 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
             return doReverseGeocoding(latitude, longitude);
         }
         return addresses;
-    }
-
-    @OnClick(R.id.tv_destination)
-    void clickTextViewDestination() {
-        openPlacePickerActivity(PLACE_PICKER_REQUEST);
     }
 
     @OnClick(R.id.tv_date)
@@ -320,27 +297,32 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
         dialogTimePickerLightEnd();
     }
 
-    @OnClick(R.id.bt_search)
+    @OnClick(R.id.bt_request)
     void searchTeacher() {
 //        Toast.makeText(this, textViewDateStudy.getText(), Toast.LENGTH_SHORT).show();
         submitSearch();
     }
 
     void submitSearch() {
+        reason = String.valueOf(editTextReason.getText());
+
         textViewDate.setError(null);
         textViewTimeEnd.setError(null);
-        textViewDestination.setError(null);
         textViewTimeStart.setError(null);
+        editTextReason.setError(null);
 
-        boolean validated = choosenPlace != null && choosenDateMillis != null && choosenHourStart != null && choosenMinuteStart != null && choosenHourEnd != null && choosenMinuteEnd != null;
-
-        if(choosenPlace == null) textViewDestination.setError("Bidang isian tempat acuan wajib diisi.");
         if(choosenDateMillis == null) textViewDate.setError("Bidang isian tanggal wajib diisi.");
         if(choosenHourStart == null) textViewTimeStart.setError("Bidang isian waktu mulai wajib diisi.");
         if(choosenHourEnd == null) textViewTimeEnd.setError("Bidang isian waktu selesai wajib diisi.");
+        if(reason == null || reason.equals("")) editTextReason.setError("Bidang isian alasan harus diisi");
+
+        Log.d(TAG, "submitSearch: " + editTextReason.getText());
+
+        boolean validated = choosenDateMillis != null && choosenHourStart != null && choosenMinuteStart != null && choosenHourEnd != null && choosenMinuteEnd != null && reason != null && !reason.equals("");
 
         if(validated) {
 //            Toast.makeText(this, "Validasi berhasil!", Toast.LENGTH_SHORT).show();
+            Log.w(TAG, "submitSearch2: " + choosenHourStart + ":" + choosenMinuteStart + " " + choosenHourEnd + ":" + choosenMinuteEnd);
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(choosenDateMillis);
@@ -351,8 +333,8 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
             calendar.add(Calendar.HOUR_OF_DAY, choosenHourEnd);
             calendar.add(Calendar.MINUTE, choosenMinuteEnd);
             dateEnd = calendar.getTime();
+
             Log.w(TAG, "submitSearch: " + dateStart + " " + dateEnd);
-            Log.w(TAG, "submitSearch2: " + choosenHourStart + ":" + choosenMinuteStart + " " + choosenHourEnd + ":" + choosenMinuteStart);
 
             sendRequest();
         }
@@ -362,7 +344,7 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
         progressDialog.setMessage("Silahkan tunggu...");
         progressDialog.show();
 
-        call = service.createTeacherFreeTime(latitude, longitude, Tools.convertDateToDateTimeMySQL(dateStart), Tools.convertDateToDateTimeMySQL(dateEnd), String.valueOf(textViewDestination.getText()));
+        call = service.updateEventTeacher(event.getId(), Tools.convertDateToDateTimeMySQL(dateStart), Tools.convertDateToDateTimeMySQL(dateEnd), String.valueOf(editTextReason.getText()));
         call.enqueue(new Callback<CreateResponse>() {
             @Override
             public void onResponse(Call<CreateResponse> call, Response<CreateResponse> response) {
@@ -373,11 +355,11 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
-                        showSuccessDialog("Berhasil mengirim permintaan jadwal ke calon guru! Anda akan dikirimkan notifikasi ketika guru anda sudah menerima permintaan jadwal anda");
+                        showSuccessDialog("Berhasil mengirimkan permintaan penggantian jadwal! Silahkan tunggu sampai " + event.getStudent().getName() + " meninjau perubahan yang anda berikan!");
                     }
                 }else {
                     tokenManager.deleteToken();
-                    startActivity(new Intent(AddNewTeacherFreeTimeActivity.this, LoginActivity.class));
+                    startActivity(new Intent(RequestEventModificationActivity.this, LoginActivity.class));
                     finish();
 
                 }
@@ -402,6 +384,8 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
 
         TextView txtContent = dialogView.findViewById(R.id.content);
         txtContent.setText(message);
+        AppCompatButton btnClose = dialogView.findViewById(R.id.bt_close);
+        btnClose.setText("Kembali");
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialog.getWindow().getAttributes());
@@ -413,7 +397,7 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 dialog.dismiss();
 
-                Intent intent = new Intent(AddNewTeacherFreeTimeActivity.this, MainActivity.class);
+                Intent intent = new Intent(RequestEventModificationActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);

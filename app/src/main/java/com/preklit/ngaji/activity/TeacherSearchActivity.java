@@ -144,10 +144,12 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
                         calendar.set(Calendar.YEAR, year);
                         calendar.set(Calendar.MONTH, monthOfYear);
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        calendar.set(Calendar.HOUR, 0);
+                        Log.d(TAG, "onDateSet: " + calendar.getTime());
+                        calendar.set(Calendar.HOUR_OF_DAY, 0);
                         calendar.set(Calendar.MINUTE, 0);
                         calendar.set(Calendar.SECOND, 0);
                         choosenDateMillis = calendar.getTimeInMillis();
+                        Log.d(TAG, "onDateSet: " + calendar.getTime());
                         textViewDateStudy.setText(Tools.getFormattedDateSimple(choosenDateMillis));
                     }
                 },
@@ -175,6 +177,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
                     choosenMinute = minute;
                     NumberFormat f = new DecimalFormat("00");
                     textViewTimeStudy.setText(f.format(choosenHour) + " : " + f.format(choosenMinute));
+                    Log.d(TAG, "onTimeSet: " + f.format(choosenHour) + " : " + f.format(choosenMinute));
                 }
             }, cur_calender.get(Calendar.HOUR_OF_DAY), cur_calender.get(Calendar.MINUTE), true);
             //set dark light
@@ -189,6 +192,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
                     choosenMinute = minute;
                     NumberFormat f = new DecimalFormat("00");
                     textViewTimeStudy.setText(f.format(choosenHour) + " : " + f.format(choosenMinute));
+                    Log.d(TAG, "onTimeSet: " + f.format(choosenHour) + " : " + f.format(choosenMinute));
                 }
             }, choosenHour, choosenMinute, true);
             //set dark light
@@ -289,14 +293,20 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
         if(validated) {
 //            Toast.makeText(this, "Validasi berhasil!", Toast.LENGTH_SHORT).show();
 
+            studyDuration = durationIntegerArray[spinnerDurationStudy.getSelectedItemPosition()];
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(choosenDateMillis);
+
+            Log.d(TAG, "submitSearch: " + calendar.getTime());
+
             calendar.add(Calendar.HOUR_OF_DAY, choosenHour);
             calendar.add(Calendar.MINUTE, choosenMinute);
             Date dateStart = calendar.getTime();
             calendar.add(Calendar.MINUTE, studyDuration);
             Date dateEnd = calendar.getTime();
             Gson gson = new Gson();
+
+            Log.d(TAG, "submitSearch: " + studyDuration + " " + dateStart + " " + dateEnd);
 
             Intent intent = new Intent(TeacherSearchActivity.this, ListEventSearchActivity.class);
             intent.putExtra("start_time", gson.toJson(dateStart));
@@ -315,6 +325,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         studyDuration = durationIntegerArray[position];
+        Log.d(TAG, "onItemSelected: " + studyDuration);
     }
 
     @Override

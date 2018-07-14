@@ -195,6 +195,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/spacing_large"
+                            android:backgroundTint="@color/red_400"
                             android:text="Batalkan"
                             android:theme="@style/Button.Accent" />
 
@@ -215,7 +216,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Ajukan Penggantian"
-                        android:backgroundTint="@color/blue_500"
                         android:theme="@style/Button.Accent" />
 
 

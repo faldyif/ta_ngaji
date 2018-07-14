@@ -17,6 +17,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -26,6 +27,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,44 +65,40 @@ import retrofit2.Response;
 
 import static com.preklit.ngaji.MyApp.APP_NAME;
 
-public class DetailEventActivity extends AppCompatActivity {
+public class ReviewEventModificationRequestActivity extends AppCompatActivity {
 
-    private static final String TAG = DetailEventActivity.class.getSimpleName();
+    private static final String TAG = ReviewEventModificationRequestActivity.class.getSimpleName();
 
-    @BindView(R.id.name)
-    TextView textViewName;
-    @BindView(R.id.whatsapp_number)
-    TextView textViewWhatsappNumber;
-    @BindView(R.id.status)
-    TextView textViewStatus;
     @BindView(R.id.start_date)
     TextView textViewStartDate;
     @BindView(R.id.time_info)
     TextView textViewTimeInfo;
-    @BindView(R.id.event_type)
-    TextView textViewEventType;
-    @BindView(R.id.location_description)
-    TextView textViewLocationDescription;
+
+    @BindView(R.id.start_date_after)
+    TextView textViewStartDateAfter;
+    @BindView(R.id.time_info_after)
+    TextView textViewTimeInfoAfter;
 
     @BindView(R.id.btn_accept)
     Button buttonAccept;
     @BindView(R.id.btn_cancel)
     Button buttonCancel;
-    @BindView(R.id.btn_change_request)
-    Button buttonChangeRequest;
 
-    SupportMapFragment mapFragment;
+    SupportMapFragment mapFragmentBefore;
+    SupportMapFragment mapFragmentAfter;
     Event event;
-    GoogleMap mMap;
+    GoogleMap mMapBefore;
+    GoogleMap mMapAfter;
     Gson gson;
     Context ctx;
     private ProgressDialog progressDialog;
 
     Date dateStart;
     Date dateEnd;
+    Date dateStartAfter;
+    Date dateEndAfter;
     String eventType;
     Boolean hasProcessed;
-    Integer eventIndex;
 
     private Call<CreateResponse> call;
     private TokenManager tokenManager;
@@ -108,7 +107,7 @@ public class DetailEventActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_event_teacher);
+        setContentView(R.layout.activity_review_event_teacher);
         ButterKnife.bind(this);
 
         // Get passed variable from activity berfore
@@ -116,8 +115,7 @@ public class DetailEventActivity extends AppCompatActivity {
         ctx = getApplicationContext();
         gson = new Gson();
         Intent intent = getIntent();
-        event = gson.fromJson(intent.getStringExtra("event_detail"), Event.class);
-        eventIndex = intent.getIntExtra("event_detail", 0);
+        event = gson.fromJson(intent.getStringExtra("event"), Event.class);
 
         progressDialog = new ProgressDialog(this);
         initToolbar();
@@ -126,7 +124,7 @@ public class DetailEventActivity extends AppCompatActivity {
         tokenManager = TokenManager.getInstance(getSharedPreferences("prefs", MODE_PRIVATE));
 
         if(tokenManager.getToken() == null){
-            startActivity(new Intent(DetailEventActivity.this, LoginActivity.class));
+            startActivity(new Intent(ReviewEventModificationRequestActivity.this, LoginActivity.class));
             finish();
         }
 
@@ -146,52 +144,12 @@ public class DetailEventActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent();
-        intent.putExtra("event_index", eventIndex);
         setResult(Activity.RESULT_OK, intent);
         Log.w(TAG, "onBackPressed: Nih");
         finish();
     }
 
-    @OnClick(R.id.btn_change_request)
-    void changeRequest() {
-        Gson gson = new Gson();
-
-        Intent intent;
-//        if(event.getEventModificationRequest() != null && event.getEventModificationRequest().getRequestByTeacher() == 0) {
-        if(event.getEventModificationRequest() != null) {
-            intent = new Intent(DetailEventActivity.this, ReviewEventModificationRequestActivity.class);
-        } else {
-            intent = new Intent(DetailEventActivity.this, RequestEventModificationActivity.class);
-        }
-        intent.putExtra("event", gson.toJson(event));
-        startActivity(intent);
-
-    }
-
     private void initComponent() {
-        final CircularImageView image = findViewById(R.id.image);
-        final CollapsingToolbarLayout collapsing_toolbar = findViewById(R.id.collapsing_toolbar);
-        ((AppBarLayout) findViewById(R.id.app_bar_layout)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                int min_height = ViewCompat.getMinimumHeight(collapsing_toolbar) * 2;
-                float scale = (float) (min_height + verticalOffset) / min_height;
-                image.setScaleX(scale >= 0 ? scale : 0);
-                image.setScaleY(scale >= 0 ? scale : 0);
-            }
-        });
-
-        if(event.getEventModificationRequest() != null) {
-            if(event.getEventModificationRequest().getRequestByTeacher() == 1) {
-                buttonChangeRequest.setText("Menunggu Persetujuan");
-                buttonChangeRequest.setEnabled(false);
-                buttonChangeRequest.setBackgroundColor(Color.GRAY);
-                buttonChangeRequest.setTextColor(Color.BLACK);
-            } else {
-                buttonChangeRequest.setText("Respon Permintaan");
-            }
-        }
-
         // Initialize date formats
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("in", "id-ID"));
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
@@ -199,80 +157,58 @@ public class DetailEventActivity extends AppCompatActivity {
         // Converting to local variable to easy modification
         dateStart = Tools.convertDateTimeMySQLStringToJavaDate(event.getStartTime());
         dateEnd = Tools.convertDateTimeMySQLStringToJavaDate(event.getEndTime());
-        eventType = event.getEventType();
+        dateStartAfter = Tools.convertDateTimeMySQLStringToJavaDate(event.getEventModificationRequest().getStartTime());
+        dateEndAfter = Tools.convertDateTimeMySQLStringToJavaDate(event.getEventModificationRequest().getEndTime());
 
         // Inserting values to components
-        Tools.displayImageRoundFromUrl(this, image, event.getStudent().getProfilePicUrl());
-        textViewName.setText(event.getStudent().getName());
         textViewStartDate.setText(dateFormat.format(dateStart));
-        textViewWhatsappNumber.setText(event.getStudent().getWhatsappNumber());
         textViewTimeInfo.setText(timeFormat.format(dateStart) + " - " + timeFormat.format(dateEnd));
-        textViewEventType.setText("Kelas " + eventType.substring(0, 1).toUpperCase() + eventType.substring(1));
-        textViewLocationDescription.setText(event.getLocationDetails());
-        if(event.getLocationDetails() == null) {
-            float twelveDp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 3, ctx.getResources().getDisplayMetrics());
 
-            textViewLocationDescription.setText("(Tidak ada keterangan lokasi yang diberikan)");
-            textViewLocationDescription.setTextSize(twelveDp);
-            textViewStatus.setTextColor(getResources().getColor(R.color.grey_600));
-        }
+        textViewStartDateAfter.setText(dateFormat.format(dateStartAfter));
+        textViewTimeInfoAfter.setText(timeFormat.format(dateStartAfter) + " - " + timeFormat.format(dateEndAfter));
 
         Log.w(TAG, "initComponent: " + event.getStatus());
-        textViewStatus.setText("cek");
-        // Inserting status values
-        Drawable img = null;
-        switch (event.getStatus()) {
-            case "accepted":
-                img = ctx.getResources().getDrawable(R.drawable.ic_check_circle);
-                img.setBounds( 0, 0, 60, 60);
 
-                textViewStatus.setText("Jadwal telah disetujui");
-                textViewStatus.setCompoundDrawables(img, null, null, null);
-                textViewStatus.setTextColor(getResources().getColor(R.color.green_600));
-
-                buttonAccept.setVisibility(View.GONE);
-                buttonCancel.setVisibility(View.GONE);
-                break;
-            case "rejected":
-                img = ctx.getResources().getDrawable(R.drawable.ic_close_circle);
-                img.setBounds( 0, 0, 60, 60);
-
-                textViewStatus.setText("Jadwal ditolak");
-                textViewStatus.setCompoundDrawables(img, null, null, null);
-                textViewStatus.setTextColor(getResources().getColor(R.color.red_400));
-
-                buttonAccept.setVisibility(View.GONE);
-                buttonCancel.setVisibility(View.GONE);
-                break;
-            case "pending":
-                img = ctx.getResources().getDrawable(R.drawable.ic_dots_horizontal_circle);
-                img.setBounds( 0, 0, 60, 60);
-
-                textViewStatus.setText("Menunggu respon guru...");
-                textViewStatus.setCompoundDrawables(img, null, null, null);
-                textViewStatus.setTextColor(getResources().getColor(R.color.grey_600));
-                break;
-        }
-
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
+        mapFragmentBefore = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_before);
+        mapFragmentAfter = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_after);
+        mapFragmentBefore.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                mMap = googleMap;
+                mMapBefore = googleMap;
 
                 // Add a marker in Sydney and move the camera
                 LatLng tempatNgaji = new LatLng(event.getLatitude(), event.getLongitude());
-                Marker marker2 = mMap.addMarker(new MarkerOptions().position(tempatNgaji).title("Lokasi ngaji"));
+                Marker marker2 = mMapBefore.addMarker(new MarkerOptions().position(tempatNgaji).title("Lokasi ngaji lama"));
                 marker2.showInfoWindow();
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(tempatNgaji));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 1, null);
+                mMapBefore.moveCamera(CameraUpdateFactory.newLatLng(tempatNgaji));
+                mMapBefore.animateCamera(CameraUpdateFactory.zoomTo(15), 1, null);
             }
         });
+
+        if(event.getEventModificationRequest() != null && event.getEventModificationRequest().getLatitude() != null) {
+
+            mapFragmentAfter.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    mMapAfter = googleMap;
+
+                    // Add a marker in Sydney and move the camera
+                    LatLng tempatNgaji = new LatLng(event.getEventModificationRequest().getLatitude(), event.getEventModificationRequest().getLongitude());
+                    Marker marker2 = mMapAfter.addMarker(new MarkerOptions().position(tempatNgaji).title("Lokasi ngaji baru"));
+                    marker2.showInfoWindow();
+                    mMapAfter.moveCamera(CameraUpdateFactory.newLatLng(tempatNgaji));
+                    mMapAfter.animateCamera(CameraUpdateFactory.zoomTo(15), 1, null);
+                }
+            });
+
+        } else {
+            mapFragmentAfter.getView().setVisibility(View.GONE);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_detail_with_phone_number, menu);
+//        getMenuInflater().inflate(R.menu.menu_detail_with_phone_number, menu);
         return true;
     }
 
@@ -313,11 +249,18 @@ public class DetailEventActivity extends AppCompatActivity {
     void clickCancel() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Konfirmasi jadwal");
-        builder.setMessage("Apakah anda akan menolak jadwal ini?");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setMessage("Apakah anda akan menolak jadwal ini? Berikan alasannya!");
         builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                updateEventStatus(0);
+                String reason = input.getText().toString();
+                respondUpdateEventStatus(0, reason);
             }
         });
         builder.setNegativeButton("Tidak", null);
@@ -332,18 +275,18 @@ public class DetailEventActivity extends AppCompatActivity {
         builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                updateEventStatus(1);
+                respondUpdateEventStatus(1, null);
             }
         });
         builder.setNegativeButton("Tidak", null);
         builder.show();
     }
 
-    void updateEventStatus(final Integer status) {
+    void respondUpdateEventStatus(final Integer status, String reason) {
         progressDialog.setMessage("Silahkan tunggu...");
         progressDialog.show();
 
-        call = service.updateEventStatusTeacher(event.getId(), status);
+        call = service.respondUpdateEventTeacher(event.getId(), status, reason);
         call.enqueue(new Callback<CreateResponse>() {
             @Override
             public void onResponse(Call<CreateResponse> call, Response<CreateResponse> response) {
@@ -356,9 +299,8 @@ public class DetailEventActivity extends AppCompatActivity {
                     showSuccessDialog("Berhasil mengupdate jadwal!", status);
                 }else {
                     tokenManager.deleteToken();
-                    startActivity(new Intent(DetailEventActivity.this, LoginActivity.class));
+                    startActivity(new Intent(ReviewEventModificationRequestActivity.this, LoginActivity.class));
                     finish();
-
                 }
             }
 
@@ -396,29 +338,6 @@ public class DetailEventActivity extends AppCompatActivity {
 
                 buttonAccept.setVisibility(View.GONE);
                 buttonCancel.setVisibility(View.GONE);
-
-                Drawable img = null;
-                switch (status) {
-                    case 1:
-                        img = ctx.getResources().getDrawable(R.drawable.ic_check_circle);
-                        img.setBounds( 0, 0, 60, 60);
-
-                        textViewStatus.setText("Jadwal telah disetujui");
-                        textViewStatus.setCompoundDrawables(img, null, null, null);
-                        textViewStatus.setTextColor(getResources().getColor(R.color.green_600));
-                        hasProcessed = true;
-                        break;
-                    case 0:
-                        img = ctx.getResources().getDrawable(R.drawable.ic_close_circle);
-                        img.setBounds( 0, 0, 60, 60);
-
-                        textViewStatus.setText("Jadwal ditolak");
-                        textViewStatus.setCompoundDrawables(img, null, null, null);
-                        textViewStatus.setTextColor(getResources().getColor(R.color.red_400));
-                        hasProcessed = true;
-                        break;
-                }
-
             }
         });
 

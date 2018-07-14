@@ -23,13 +23,6 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/bg_polygon"
-                app:layout_collapseMode="parallax" />
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -57,49 +50,6 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_marginTop="60dp"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/medal"
-                    app:srcCompat="@drawable/ic_medal"
-                    android:tint="@color/medal_silver"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"/>
-
-                <TextView
-                    android:id="@+id/rank"
-                    android:paddingLeft="5dp"
-                    android:text="Pengajar Tingkat Perak"
-                    android:textSize="11.5sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Martha Harris"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-                android:textColor="@color/grey_90" />
-
-
-            <!--<android.support.v7.widget.AppCompatRatingBar-->
-                <!--style="@style/Yellow.Small.AppCompatRatingBar"-->
-                <!--android:id="@+id/rating"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:clickable="false"-->
-                <!--android:numStars="5"-->
-                <!--android:rating="4.5"-->
-                <!--android:stepSize="0.5"-->
-                <!--android:theme="@style/Yellow.Small.AppCompatRatingBar" />-->
-
             <View
                 android:layout_width="0dp"
                 android:layout_height="@dimen/spacing_large" />
@@ -108,7 +58,7 @@
                 android:id="@+id/summary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ikhtisar"
+                android:text="Sebelum"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/grey_90"
                 android:textStyle="bold"/>
@@ -116,14 +66,6 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="@dimen/spacing_small" />
-
-            <TextView
-                android:id="@+id/event_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Kelas Tahsin"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/grey_90"/>
 
             <TextView
                 android:id="@+id/start_date"
@@ -137,19 +79,19 @@
                 android:id="@+id/time_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-"
+                android:text="XX:XX - XX:XX"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/grey_90"/>
-
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="@dimen/spacing_large" />
 
             <TextView
+                android:id="@+id/summary_after"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Keterangan Lokasi"
+                android:text="Sesudah"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/grey_90"
                 android:textStyle="bold"/>
@@ -159,13 +101,18 @@
                 android:layout_height="@dimen/spacing_small" />
 
             <TextView
-                android:paddingLeft="40dp"
-                android:paddingRight="40dp"
-                android:gravity="center"
-                android:id="@+id/location_description"
+                android:id="@+id/start_date_after"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/lorem_ipsum"
+                android:text="Senin, 1 Juni 2018"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/grey_90"/>
+
+            <TextView
+                android:id="@+id/time_info_after"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="XX:XX - XX:XX"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/grey_90"/>
 
@@ -173,41 +120,78 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/spacing_medium" />
 
-            <Button
-                android:id="@+id/btn_accept"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:text="JADWALKAN"
-                android:theme="@style/Button.Accent" />
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/btn_cancel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_large"
+                            android:backgroundTint="@color/red_400"
+                            android:text="Tolak"
+                            android:theme="@style/Button.Accent" />
+
+                        <Button
+                            android:id="@+id/btn_accept"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_large"
+                            android:backgroundTint="@color/green_600"
+                            android:text="Terima"
+                            android:theme="@style/Button.Accent" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
 
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="@dimen/spacing_xlarge" />
 
-            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/map_fragment"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                tools:context="com.preklit.ngaji.activity.MapsActivity" />
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal"
+                tools:context=".MainActivity" >
+
+                <fragment
+                    android:id="@+id/map_before"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="500dp"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    tools:context="com.preklit.ngaji.activity.MapsActivity" >
+                </fragment>
+
+                <fragment
+                    android:id="@+id/map_after"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="500dp"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    tools:context="com.preklit.ngaji.activity.MapsActivity" >
+                </fragment>
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
 
-    <com.mikhaellopez.circularimageview.CircularImageView
-        android:id="@+id/image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/photo_female_6"
-        app:civ_border="true"
-        app:civ_border_width="2dp"
-        app:layout_anchor="@id/app_bar_layout"
-        app:layout_anchorGravity="bottom|center" />
 
 
 </android.support.design.widget.CoordinatorLayout>

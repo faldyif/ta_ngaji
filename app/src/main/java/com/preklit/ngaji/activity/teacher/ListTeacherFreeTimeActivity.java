@@ -41,7 +41,7 @@ import retrofit2.Response;
 public class ListTeacherFreeTimeActivity extends AppCompatActivity {
     private View parent_view;
 
-    private static final String TAG = ListEventSearchActivity.class.getSimpleName();
+    private static final String TAG = ListTeacherFreeTimeActivity.class.getSimpleName();
     private RecyclerViewEmptySupport recyclerView;
     private ListTeacherFreeTimeAdapter mAdapter;
     private List<TeacherFreeTime> items = new ArrayList<>();

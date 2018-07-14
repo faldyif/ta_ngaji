@@ -1,7 +1,9 @@
 package com.preklit.ngaji.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -168,8 +170,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showIntro() {
-        Intent intent = new Intent(LoginActivity.this, IntroActivity.class);
-        startActivity(intent);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences( this);
+        if(!sp.getBoolean("introScreen",false)) {
+            Intent intent = new Intent(LoginActivity.this, IntroActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

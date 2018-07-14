@@ -25,8 +25,8 @@ public class SelfUserDetail {
     String role;
     @Json(name = "credits_amount")
     Double creditsAmount;
-    @Json(name = "loyalty_point")
-    Integer loyaltyPoint;
+    @Json(name = "loyalty_points")
+    Integer loyaltyPoints;
 
     @Nullable
     @Json(name = "teacher_data")
@@ -53,8 +53,8 @@ public class SelfUserDetail {
         return creditsAmount;
     }
 
-    public Integer getLoyaltyPoint() {
-        return loyaltyPoint;
+    public Integer getLoyaltyPoints() {
+        return loyaltyPoints;
     }
 
     public String getId() {

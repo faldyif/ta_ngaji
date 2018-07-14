@@ -1,22 +1,33 @@
 package com.preklit.ngaji.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.marlonlom.utilities.timeago.TimeAgo;
+import com.github.marlonlom.utilities.timeago.TimeAgoMessages;
+import com.google.common.collect.Lists;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.nex3z.notificationbadge.NotificationBadge;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.TokenManager;
@@ -24,6 +35,8 @@ import com.preklit.ngaji.UserManager;
 import com.preklit.ngaji.activity.teacher.ListPengajuanEventActivity;
 import com.preklit.ngaji.activity.teacher.ListTeacherFreeTimeActivity;
 import com.preklit.ngaji.activity.teacher.ListUpcomingEventActivity;
+import com.preklit.ngaji.entities.Event;
+import com.preklit.ngaji.entities.EventsResponse;
 import com.preklit.ngaji.entities.SelfUserDetail;
 import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
 import com.preklit.ngaji.network.ApiService;
@@ -31,6 +44,12 @@ import com.preklit.ngaji.network.RetrofitBuilder;
 import com.preklit.ngaji.network.firebase.FirebaseInstanceIDService;
 import com.preklit.ngaji.utils.Tools;
 import com.preklit.ngaji.utils.ViewAnimation;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +64,18 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.teacher_card_section)
     CardView teacherCardSection;
+    @BindView(R.id.reminder_lyt)
+    LinearLayout reminderLayout;
+    @BindView(R.id.tv_ngajipoints)
+    TextView textViewNgajiPoints;
+    @BindView(R.id.tv_saldo)
+    TextView textViewSaldo;
+    @BindView(R.id.tv_nama_pengguna)
+    TextView textViewNamaPengguna;
+    @BindView(R.id.tv_phone_number)
+    TextView textViewPhoneNumber;
+    @BindView(R.id.photo_round)
+    ImageView imageViewPhotoRound;
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private TokenManager tokenManager;
@@ -54,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
     private int mPengajuanGuruCount = 0;
     NotificationBadge teacherPengajuanBadge;
 
+    private List<Event> arrEvent;
+    Context ctx;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         progressDialog = new ProgressDialog(this);
+        ctx = this;
 
         teacherPengajuanBadge = findViewById(R.id.teacher_pengajuan_badge);
         teacherPengajuanBadge.setText("...");
@@ -78,19 +113,30 @@ public class MainActivity extends AppCompatActivity {
         if(userManager.getUserDetail() == null) {
             getSelfUserData();
         } else {
-            toolbar.setTitle("Halo, " + userManager.getUserDetail().getName());
-            initTeacherMenu();
-            if(userManager.getUserDetail().getRole().equals("teacher")) {
+            initUserText();
+            getSelfUserData();
+            if(userManager.getUserDetail().getRole().equals("teacher"))
                 getCountUnconfirmed();
-            }
+
         }
+        getListEvents2Hours();
+    }
+
+    private void initUserText() {
+        Tools.displayImageRoundFromUrl(ctx, imageViewPhotoRound, userManager.getUserDetail().getProfilePicUrl());
+        toolbar.setTitle("Halo, " + userManager.getUserDetail().getName());
+        textViewNgajiPoints.setText(userManager.getUserDetail().getLoyaltyPoints() + " NgajiPoints");
+        textViewNamaPengguna.setText(userManager.getUserDetail().getName());
+        textViewPhoneNumber.setText(userManager.getUserDetail().getWhatsappNumber());
+        textViewSaldo.setText("Rp " + String.valueOf(userManager.getUserDetail().getCreditsAmount().intValue()));
+        initTeacherMenu();
     }
 
     private void initTeacherMenu() {
         Log.w(TAG, "initTeacherMenu: " + userManager.getUserDetail().getRole());
-        if(!userManager.getUserDetail().getRole().equals("teacher")) {
+
+        if(!userManager.getUserDetail().getRole().equals("teacher"))
             teacherCardSection.setVisibility(View.GONE);
-        }
     }
 
     private void initToolbar() {
@@ -133,11 +179,6 @@ public class MainActivity extends AppCompatActivity {
         openTeacherSearchActivity("tahfidz");
     }
 
-    @OnClick(R.id.menu_tadabbur)
-    void clickMenuTadabbur() {
-        openTeacherSearchActivity("tadabbur");
-    }
-
     void openTeacherSearchActivity(String ngajiType) {
         Intent intent = new Intent(MainActivity.this, TeacherSearchActivity.class);
         intent.putExtra("ngaji_type", ngajiType);
@@ -168,6 +209,18 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, 123);
     }
 
+    @OnClick(R.id.btn_edit_profile)
+    void openEditProfile() {
+        Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+        startActivity(intent);
+    }
+//
+//    @OnClick(R.id.cek_presensi)
+//    void onclickCekPresensi() {
+//        Intent intent = new Intent(MainActivity.this, PresenceActivity.class);
+//        startActivity(intent);
+//    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -186,11 +239,7 @@ public class MainActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     Log.w(TAG, "onResponse: " + response.body());
                     userManager.saveUser(response.body());
-                    toolbar.setTitle("Halo, " + userManager.getUserDetail().getName());
-                    initTeacherMenu();
-                    if(userManager.getUserDetail().getRole().equals("teacher")) {
-                        getCountUnconfirmed();
-                    }
+                    initUserText();
                 }else {
                     Toast.makeText(MainActivity.this, "Kok gagal", Toast.LENGTH_SHORT).show();
                 }
@@ -227,6 +276,101 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    void getListEvents2Hours(){
+        Call<EventsResponse> call = service.listEvents2Hours();
+        call.enqueue(new Callback<EventsResponse>() {
+            @Override
+            public void onResponse(Call<EventsResponse> call, Response<EventsResponse> response) {
+                Log.w(TAG, "onResponse: " + response );
+
+                if(response.isSuccessful()){
+                    Log.w(TAG, "onResponse: " + response.body().getData());
+                    arrEvent = response.body().getData();
+
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+
+
+                    for (final Event event: arrEvent) {
+                        LayoutInflater inflater = LayoutInflater.from(ctx);
+                        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.lyt_card_reminder, null, false);
+
+                        CircularImageView imageView = layout.findViewById(R.id.photo_round);
+                        TextView textViewName = layout.findViewById(R.id.card_name);
+                        TextView textViewJadwalDesc = layout.findViewById(R.id.jadwal_desc);
+                        TextView textViewTimeInfo = layout.findViewById(R.id.time_info);
+                        TextView textViewLocationDescription = layout.findViewById(R.id.location_description);
+                        TextView textViewTimeAgo = layout.findViewById(R.id.time_ago);
+                        Button btnMap = layout.findViewById(R.id.btn_map);
+                        Button btnPresensi = layout.findViewById(R.id.btn_presensi);
+
+                        Date dateStart = Tools.convertDateTimeMySQLStringToJavaDate(event.getStartTime());
+                        Date dateEnd = Tools.convertDateTimeMySQLStringToJavaDate(event.getEndTime());
+
+                        if(event.getPresence().getCheckInTime() != null) {
+                            btnPresensi.setEnabled(false);
+                            btnPresensi.setText("Sudah Presensi");
+                            btnPresensi.setTextColor(Color.GRAY);
+                        }
+                        if(event.getTeacher().getId() == Integer.valueOf(userManager.getUserDetail().getId())) {
+                            Tools.displayImageRoundFromUrl(ctx, imageView, event.getStudent().getProfilePicUrl());
+                            textViewName.setText(event.getStudent().getName());
+                            textViewJadwalDesc.setText("Jadwal Mengajar");
+
+                        } else {
+                            Tools.displayImageRoundFromUrl(ctx, imageView, event.getTeacher().getProfilePicUrl());
+                            textViewName.setText(event.getTeacher().getName());
+                            textViewJadwalDesc.setText("Jadwal Belajar");
+                        }
+
+                        // TODO: Perbaiki time ago bahasanya belum bisa bahasa indonesia
+                        textViewTimeInfo.setText("Hari ini, " + timeFormat.format(dateStart) + " - " + timeFormat.format(dateEnd));
+
+                        Locale localeBylanguageTag = new Locale("in");
+                        TimeAgoMessages messages = new TimeAgoMessages.Builder().withLocale(localeBylanguageTag).build();
+                        String textTimeAgo = TimeAgo.using(dateStart.getTime(), messages);
+                        textViewTimeAgo.setText(textTimeAgo);
+
+                        textViewLocationDescription.setText("Di " + event.getShortPlaceName() + ((event.getLocationDetails() != null) ? "(" + event.getLocationDetails() + ")" : ""));
+                        btnPresensi.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(event.getTeacher().getId() == Integer.valueOf(userManager.getUserDetail().getId())) {
+                                    Intent intent = new Intent(MainActivity.this, com.preklit.ngaji.activity.teacher.PresenceActivity.class);
+                                    intent.putExtra("event", (new Gson()).toJson(event));
+                                    startActivity(intent);
+
+                                } else {
+                                    Intent intent = new Intent(MainActivity.this, PresenceActivity.class);
+                                    intent.putExtra("event", (new Gson()).toJson(event));
+                                    startActivity(intent);
+                                }
+                            }
+                        });
+                        btnMap.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String uri = String.format(Locale.ENGLISH, "geo:%f,%f?q=%f,%f(Lokasi+Ngaji)", event.getLatitude(), event.getLongitude(), event.getLatitude(), event.getLongitude());
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                                ctx.startActivity(intent);
+                            }
+                        });
+
+
+                        reminderLayout.addView(layout);
+                        Log.d(TAG, "onResponse: " + "layout added");
+                    }
+                }else {
+                    Toast.makeText(MainActivity.this, "Kok gagal", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventsResponse> call, Throwable t) {
+                Log.w(TAG, "onFailure: " + t.getMessage() );
+            }
+        });
     }
 
     void logOut() {

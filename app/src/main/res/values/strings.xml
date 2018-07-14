@@ -14,6 +14,7 @@
     <string name="about_text">The best android implementation of material UI components. This app implemented based on Google Design Guidelines.
     </string>
     <string name="err_name">Bidang isian nama wajib diisi.</string>
+    <string name="err_phone">Bidang isian nomor telepon harus berupa nomor yang valid.</string>
     <string name="err_email">Isian email harus berupa alamat surel yang valid.</string>
     <string name="err_password">Isian password harus minimal 6 karakter.</string>
     <string name="err_gender">Bidang isian jenis kelamin wajib diisi.</string>
