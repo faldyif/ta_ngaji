@@ -266,16 +266,6 @@ public class DetailEventStudentActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
-        } else if (item.getItemId() == R.id.action_whatsapp) {
-            String message = "Assalamualaikum," + "\n" + "Saya " + event.getStudent().getName() + ", murid anda dari aplikasi " + APP_NAME + "\n";
-            try {
-                String url = "https://api.whatsapp.com/send?phone=" + event.getTeacher().getWhatsappNumber().substring(1) + "&text=" + URLEncoder.encode(message, "UTF-8");
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
         } else if (item.getItemId() == R.id.action_sms) {
             String message = "Assalamualaikum," + "\n" + "Saya " + event.getStudent().getName() + ", murid anda dari aplikasi " + APP_NAME + "\n";
 

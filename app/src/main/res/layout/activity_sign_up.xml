@@ -150,7 +150,7 @@
                                 android:id="@+id/radio_male"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Ikhwan"
+                                android:text="Laki-laki"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 android:textColor="@color/grey_90" />
 
@@ -162,7 +162,7 @@
                                 android:id="@+id/radio_female"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Akhwat"
+                                android:text="Perempuan"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                                 android:textColor="@color/grey_90" />
 

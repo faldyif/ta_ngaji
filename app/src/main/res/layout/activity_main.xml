@@ -389,7 +389,7 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/menu_santri_history"
+                            android:id="@+id/menu_santri_pengajuan"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -416,51 +416,34 @@
 
                         </LinearLayout>
 
-                        <!--<LinearLayout-->
-                            <!--android:id="@+id/menu_santri_modreq"-->
-                            <!--android:layout_width="0dp"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_weight="1"-->
-                            <!--android:gravity="center"-->
-                            <!--android:orientation="vertical">-->
-
-                            <!--<android.support.design.widget.FloatingActionButton-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:tint="@android:color/white"-->
-                                <!--app:backgroundTint="@color/blue_400"-->
-                                <!--app:elevation="0dp"-->
-                                <!--app:fabSize="mini"-->
-                                <!--app:rippleColor="@android:color/white"-->
-                                <!--app:srcCompat="@drawable/ic_event_edit" />-->
-
-
-                            <!--<com.nex3z.notificationbadge.NotificationBadge-->
-                                <!--android:id="@+id/student_modreq_badge"-->
-                                <!--android:layout_width="28dp"-->
-                                <!--android:layout_height="28dp"-->
-                                <!--android:layout_toRightOf="@id/icon"-->
-                                <!--android:layout_alignTop="@id/icon"-->
-                                <!--android:layout_marginLeft="12dp"-->
-                                <!--android:layout_marginTop="-20dp"-->
-                                <!--app:nbMaxTextLength="2"/>-->
-
-                            <!--<TextView-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:layout_marginTop="-4dp"-->
-                                <!--android:text="SUNTINGAN"-->
-                                <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"-->
-                                <!--android:textColor="@color/grey_40" />-->
-                        <!--</LinearLayout>-->
-
                         <LinearLayout
+                            android:id="@+id/menu_santri_riwayat"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:orientation="vertical">
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:tint="@android:color/white"
+                                app:backgroundTint="@color/orange_500"
+                                app:elevation="0dp"
+                                app:fabSize="mini"
+                                app:rippleColor="@android:color/white"
+                                app:srcCompat="@drawable/ic_history" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_medium"
+                                android:text="RIWAYAT"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                                android:textColor="@color/grey_40" />
+
                         </LinearLayout>
+
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -670,12 +653,33 @@
 
 
                         <LinearLayout
+                            android:id="@+id/menu_guru_riwayat"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:orientation="vertical">
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:tint="@android:color/white"
+                                app:backgroundTint="@color/pink_300"
+                                app:elevation="0dp"
+                                app:fabSize="mini"
+                                app:rippleColor="@android:color/white"
+                                app:srcCompat="@drawable/ic_history" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_medium"
+                                android:text="RIWAYAT"
+                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+                                android:textColor="@color/grey_40" />
+
                         </LinearLayout>
+
 
                     </LinearLayout>
 
@@ -790,28 +794,6 @@
                                 android:textColor="@android:color/white" />
 
                         </LinearLayout>
-
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shape_rounded_orange"
-                            android:paddingBottom="@dimen/spacing_small"
-                            android:paddingLeft="@dimen/spacing_xmedium"
-                            android:paddingRight="@dimen/spacing_xmedium"
-                            android:layout_marginTop="@dimen/spacing_small">
-
-                            <TextView
-                                android:id="@+id/tv_saldo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Rp 0"
-                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                                android:textColor="@android:color/white" />
-
-                        </LinearLayout>
-
 
                     </LinearLayout>
 

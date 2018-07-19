@@ -1,5 +1,6 @@
 package com.preklit.ngaji.activity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,8 @@ import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,7 +18,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -34,7 +40,9 @@ import com.preklit.ngaji.TokenManager;
 import com.preklit.ngaji.UserManager;
 import com.preklit.ngaji.activity.teacher.ListPengajuanEventActivity;
 import com.preklit.ngaji.activity.teacher.ListTeacherFreeTimeActivity;
+import com.preklit.ngaji.activity.teacher.ListTeachingHistoryActivity;
 import com.preklit.ngaji.activity.teacher.ListUpcomingEventActivity;
+import com.preklit.ngaji.entities.CreateResponse;
 import com.preklit.ngaji.entities.Event;
 import com.preklit.ngaji.entities.EventsResponse;
 import com.preklit.ngaji.entities.SelfUserDetail;
@@ -68,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout reminderLayout;
     @BindView(R.id.tv_ngajipoints)
     TextView textViewNgajiPoints;
-    @BindView(R.id.tv_saldo)
-    TextView textViewSaldo;
     @BindView(R.id.tv_nama_pengguna)
     TextView textViewNamaPengguna;
     @BindView(R.id.tv_phone_number)
@@ -128,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
         textViewNgajiPoints.setText(userManager.getUserDetail().getLoyaltyPoints() + " NgajiPoints");
         textViewNamaPengguna.setText(userManager.getUserDetail().getName());
         textViewPhoneNumber.setText(userManager.getUserDetail().getWhatsappNumber());
-        textViewSaldo.setText("Rp " + String.valueOf(userManager.getUserDetail().getCreditsAmount().intValue()));
         initTeacherMenu();
     }
 
@@ -140,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Tools.setSystemBarColor(this, R.color.colorPrimary);
     }
@@ -155,6 +160,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+        } else if (item.getItemId() == R.id.action_help) {
+            Intent intent = new Intent();
         } else if (item.getItemId() == R.id.action_logout) {
             logOut();
         } else {
@@ -185,8 +192,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @OnClick(R.id.menu_santri_history)
-    void openMenuSantriHistory() {
+    @OnClick(R.id.menu_santri_pengajuan)
+    void openMenuSantriPengajuan() {
         Intent intent = new Intent(MainActivity.this, ListEventForStudentActivity.class);
         startActivity(intent);
     }
@@ -194,6 +201,12 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.menu_santri_jadwal)
     void openMenuSantriJadwal() {
         Intent intent = new Intent(MainActivity.this, TimelineEventStudentActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.menu_santri_riwayat)
+    void openMenuSantriHistory() {
+        Intent intent = new Intent(MainActivity.this, ListStudyHistoryActivity.class);
         startActivity(intent);
     }
 
@@ -207,6 +220,12 @@ public class MainActivity extends AppCompatActivity {
     void openMenuGuruPengajuan() {
         Intent intent = new Intent(MainActivity.this, ListPengajuanEventActivity.class);
         startActivityForResult(intent, 123);
+    }
+
+    @OnClick(R.id.menu_guru_riwayat)
+    void openMenuGuruRiwayat() {
+        Intent intent = new Intent(MainActivity.this, ListTeachingHistoryActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.btn_edit_profile)
@@ -290,11 +309,12 @@ public class MainActivity extends AppCompatActivity {
                     arrEvent = response.body().getData();
 
                     SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM yyyy");
 
 
                     for (final Event event: arrEvent) {
                         LayoutInflater inflater = LayoutInflater.from(ctx);
-                        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.lyt_card_reminder, null, false);
+                        final LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.lyt_card_reminder, null, false);
 
                         CircularImageView imageView = layout.findViewById(R.id.photo_round);
                         TextView textViewName = layout.findViewById(R.id.card_name);
@@ -304,6 +324,7 @@ public class MainActivity extends AppCompatActivity {
                         TextView textViewTimeAgo = layout.findViewById(R.id.time_ago);
                         Button btnMap = layout.findViewById(R.id.btn_map);
                         Button btnPresensi = layout.findViewById(R.id.btn_presensi);
+                        Button btnPenilaian = layout.findViewById(R.id.btn_penilaian);
 
                         Date dateStart = Tools.convertDateTimeMySQLStringToJavaDate(event.getStartTime());
                         Date dateEnd = Tools.convertDateTimeMySQLStringToJavaDate(event.getEndTime());
@@ -312,6 +333,18 @@ public class MainActivity extends AppCompatActivity {
                             btnPresensi.setEnabled(false);
                             btnPresensi.setText("Sudah Presensi");
                             btnPresensi.setTextColor(Color.GRAY);
+                            if (event.getStudent().getId() == Integer.valueOf(userManager.getUserDetail().getId())) {
+                                if(event.getPresence().getRatingToTeacher() != null) {
+                                    continue;
+                                }
+                            } else {
+                                if(event.getPresence().getRatingToStudent() != null) {
+                                    continue;
+                                }
+                            }
+                        } else {
+                            btnPenilaian.setEnabled(false);
+                            btnPenilaian.setTextColor(Color.GRAY);
                         }
                         if(event.getTeacher().getId() == Integer.valueOf(userManager.getUserDetail().getId())) {
                             Tools.displayImageRoundFromUrl(ctx, imageView, event.getStudent().getProfilePicUrl());
@@ -325,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         // TODO: Perbaiki time ago bahasanya belum bisa bahasa indonesia
-                        textViewTimeInfo.setText("Hari ini, " + timeFormat.format(dateStart) + " - " + timeFormat.format(dateEnd));
+                        textViewTimeInfo.setText(dateFormat.format(dateStart) + ", " + timeFormat.format(dateStart) + " - " + timeFormat.format(dateEnd));
 
                         Locale localeBylanguageTag = new Locale("in");
                         TimeAgoMessages messages = new TimeAgoMessages.Builder().withLocale(localeBylanguageTag).build();
@@ -354,6 +387,12 @@ public class MainActivity extends AppCompatActivity {
                                 String uri = String.format(Locale.ENGLISH, "geo:%f,%f?q=%f,%f(Lokasi+Ngaji)", event.getLatitude(), event.getLongitude(), event.getLatitude(), event.getLongitude());
                                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                                 ctx.startActivity(intent);
+                            }
+                        });
+                        btnPenilaian.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                showReviewDialog(layout, event);
                             }
                         });
 
@@ -405,5 +444,88 @@ public class MainActivity extends AppCompatActivity {
                 Log.w(TAG, "onFailure: " + t.getMessage() );
             }
         });
+    }
+
+    private void showReviewDialog(final LinearLayout linearLayout, final Event event) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_add_review);
+        dialog.setCancelable(true);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        final EditText et_post = dialog.findViewById(R.id.et_post);
+        final AppCompatRatingBar rating_bar = dialog.findViewById(R.id.rating_bar);
+
+        final TextView textViewName = dialog.findViewById(R.id.name);
+        final TextView textViewDescription = dialog.findViewById(R.id.description);
+        final CircularImageView circularImageViewPhoto = dialog.findViewById(R.id.photo);
+
+        if(event.getTeacher().getId() == Integer.valueOf(userManager.getUserDetail().getId())) {
+            Tools.displayImageRoundFromUrl(ctx, circularImageViewPhoto, event.getStudent().getProfilePicUrl());
+            textViewName.setText(event.getStudent().getName());
+            textViewDescription.setText("Siswa");
+
+        } else {
+            Tools.displayImageRoundFromUrl(ctx, circularImageViewPhoto, event.getTeacher().getProfilePicUrl());
+            textViewName.setText(event.getTeacher().getName());
+            textViewDescription.setText("Pengajar");
+        }
+
+        dialog.findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.bt_submit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String review = et_post.getText().toString().trim();
+                if (review.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Kolom catatan penilaian wajib diisi!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d(TAG, "onClick: " + rating_bar.getRating() + " " + review);
+                    sendRatingToServer(linearLayout, event, review, Math.round(rating_bar.getRating()));
+                }
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
+    }
+
+    void sendRatingToServer(final LinearLayout linearLayout, Event event, String note, Integer rating){
+        progressDialog.setMessage("Silahkan tunggu...");
+        progressDialog.show();
+
+        Call<CreateResponse> call = service.rateEvent(event.getId(), rating, note);
+        call.enqueue(new Callback<CreateResponse>() {
+            @Override
+            public void onResponse(Call<CreateResponse> call, Response<CreateResponse> response) {
+                Log.w(TAG, "onResponse: " + response );
+                if (progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+
+                if(response.isSuccessful()){
+                    linearLayout.setVisibility(View.GONE);
+                    Toast.makeText(MainActivity.this, "Penilaian telah dikirim!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Gagal mengirim penilaian!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CreateResponse> call, Throwable t) {
+                Log.w(TAG, "onFailure: " + t.getMessage() );
+            }
+        });
+
     }
 }

@@ -207,38 +207,9 @@ public class ReviewEventModificationRequestActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_detail_with_phone_number, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
-        } else if (item.getItemId() == R.id.action_whatsapp) {
-            String message = "Assalamualaikum," + "\n" + "Saya " + event.getStudent().getName() + ", murid anda dari aplikasi " + APP_NAME + "\n";
-            try {
-                String url = "https://api.whatsapp.com/send?phone=" + event.getStudent().getWhatsappNumber().substring(1) + "&text=" + URLEncoder.encode(message, "UTF-8");
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        } else if (item.getItemId() == R.id.action_sms) {
-            String message = "Assalamualaikum," + "\n" + "Saya " + event.getStudent().getName() + ", murid anda dari aplikasi " + APP_NAME + "\n";
-
-
-            Intent intent = new Intent(Intent.ACTION_SENDTO);
-            intent.setData(Uri.parse("smsto:"+event.getStudent().getWhatsappNumber())); // This ensures only SMS apps respond
-            intent.putExtra("sms_body", message);
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivity(intent);
-            }
-        } else if (item.getItemId() == R.id.action_call) {
-            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", event.getStudent().getWhatsappNumber(), null));
-            startActivity(intent);
         } else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }

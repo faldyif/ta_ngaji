@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -32,16 +33,19 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.TokenManager;
+import com.preklit.ngaji.Utils;
 import com.preklit.ngaji.activity.DetailTeacherFreeTimeActivity;
 import com.preklit.ngaji.activity.ListEventSearchActivity;
 import com.preklit.ngaji.activity.LoginActivity;
 import com.preklit.ngaji.activity.MainActivity;
+import com.preklit.ngaji.entities.ApiError;
 import com.preklit.ngaji.entities.CreateResponse;
 import com.preklit.ngaji.network.ApiService;
 import com.preklit.ngaji.network.RetrofitBuilder;
 import com.preklit.ngaji.utils.Tools;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.Timepoint;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -50,10 +54,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -91,6 +97,8 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
     private Date dateStart;
     private Date dateEnd;
     private ProgressDialog progressDialog;
+    private Timepoint timepointEnd;
+    private Timepoint timepointStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,68 +194,42 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
      * Dialog for time picker
      */
     private void dialogTimePickerLight() {
-        if(choosenHourStart == null && choosenMinuteStart == null) {
-            Calendar cur_calender = Calendar.getInstance();
-            TimePickerDialog datePicker = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                    choosenHourStart = hourOfDay;
-                    choosenMinuteStart = minute;
-                    NumberFormat f = new DecimalFormat("00");
-                    textViewTimeStart.setText(f.format(choosenHourStart) + " : " + f.format(choosenMinuteStart));
-                }
-            }, cur_calender.get(Calendar.HOUR_OF_DAY), cur_calender.get(Calendar.MINUTE), true);
-            //set dark light
-            datePicker.setThemeDark(false);
-            datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
-            datePicker.show(getFragmentManager(), "Timepickerdialog");
-        } else {
-            TimePickerDialog datePicker = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                    choosenHourStart = hourOfDay;
-                    choosenMinuteStart = minute;
-                    NumberFormat f = new DecimalFormat("00");
-                    textViewTimeStart.setText(f.format(choosenHourStart                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ) + " : " + f.format(choosenMinuteStart));
-                }
-            }, choosenHourStart, choosenMinuteStart, true);
-            //set dark light
-            datePicker.setThemeDark(false);
-            datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
-            datePicker.show(getFragmentManager(), "Timepickerdialog");
-        }
+        Calendar cur_calender = Calendar.getInstance();
+        TimePickerDialog datePicker = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                choosenHourStart = hourOfDay;
+                choosenMinuteStart = minute;
+                NumberFormat f = new DecimalFormat("00");
+                textViewTimeStart.setText(f.format(choosenHourStart) + " : " + f.format(choosenMinuteStart));
+                timepointStart = new Timepoint(choosenHourStart, choosenMinuteStart);
+            }
+        }, cur_calender.get(Calendar.HOUR_OF_DAY), cur_calender.get(Calendar.MINUTE), true);
+        //set dark light
+        datePicker.setThemeDark(false);
+        datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
+        datePicker.show(getFragmentManager(), "Timepickerdialog");
+
+        if(timepointEnd != null) datePicker.setMaxTime(timepointEnd);
     }
     private void dialogTimePickerLightEnd() {
-        if(choosenHourEnd == null && choosenMinuteEnd == null) {
-            Calendar cur_calender = Calendar.getInstance();
-            TimePickerDialog datePicker = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                    choosenHourEnd = hourOfDay;
-                    choosenMinuteEnd = minute;
-                    NumberFormat f = new DecimalFormat("00");
-                    textViewTimeEnd.setText(f.format(choosenHourEnd) + " : " + f.format(choosenMinuteEnd));
-                }
-            }, cur_calender.get(Calendar.HOUR_OF_DAY), cur_calender.get(Calendar.MINUTE), true);
-            //set dark light
-            datePicker.setThemeDark(false);
-            datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
-            datePicker.show(getFragmentManager(), "Timepickerdialog");
-        } else {
-            TimePickerDialog datePicker = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                    choosenHourEnd = hourOfDay;
-                    choosenMinuteEnd = minute;
-                    NumberFormat f = new DecimalFormat("00");
-                    textViewTimeEnd.setText(f.format(choosenHourEnd                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ) + " : " + f.format(choosenMinuteStart));
-                }
-            }, choosenHourEnd, choosenMinuteEnd, true);
-            //set dark light
-            datePicker.setThemeDark(false);
-            datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
-            datePicker.show(getFragmentManager(), "Timepickerdialog");
-        }
+        Calendar cur_calender = Calendar.getInstance();
+        TimePickerDialog datePicker = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                choosenHourEnd = hourOfDay;
+                choosenMinuteEnd = minute;
+                NumberFormat f = new DecimalFormat("00");
+                textViewTimeEnd.setText(f.format(choosenHourEnd) + " : " + f.format(choosenMinuteEnd));
+                timepointEnd = new Timepoint(choosenHourStart, choosenMinuteStart);
+            }
+        }, cur_calender.get(Calendar.HOUR_OF_DAY), cur_calender.get(Calendar.MINUTE), true);
+        //set dark light
+        datePicker.setThemeDark(false);
+        datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
+        datePicker.show(getFragmentManager(), "Timepickerdialog");
+
+        if(timepointStart != null) datePicker.setMinTime(timepointStart);
     }
 
     @Override
@@ -368,18 +350,16 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
             public void onResponse(Call<CreateResponse> call, Response<CreateResponse> response) {
                 Log.w(TAG, "onResponse: " + response );
 
-                if(response.isSuccessful()){
-                    if(response.code() == 204) {
-                        if (progressDialog.isShowing()) {
-                            progressDialog.dismiss();
-                        }
-                        showSuccessDialog("Berhasil mengirim permintaan jadwal ke calon guru! Anda akan dikirimkan notifikasi ketika guru anda sudah menerima permintaan jadwal anda");
-                    }
-                }else {
-                    tokenManager.deleteToken();
-                    startActivity(new Intent(AddNewTeacherFreeTimeActivity.this, LoginActivity.class));
-                    finish();
+                // Dismiss the progress dialog
+                if (progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
 
+                // Handle response
+                if(response.isSuccessful()){
+                    showSuccessDialog("Berhasil mengirim permintaan jadwal ke calon guru! Anda akan dikirimkan notifikasi ketika guru anda sudah menerima permintaan jadwal anda");
+                } else {
+                    handleErrors(response.errorBody());
                 }
             }
 
@@ -388,6 +368,34 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
                 Log.w(TAG, "onFailure: " + t.getMessage() );
             }
         });
+    }
+
+
+
+    private void handleErrors(ResponseBody response) {
+
+        ApiError apiError = Utils.convertErrors(response);
+
+        for(Map.Entry<String, List<String>> error : apiError.getErrors().entrySet()) {
+            if(error.getKey().equals("time_start")) {
+                textViewTimeStart.setError(error.getValue().get(0));
+                textViewDate.setError(error.getValue().get(0));
+                Toast.makeText(this, error.getValue().get(0), Toast.LENGTH_LONG).show();
+            }
+            if(error.getKey().equals("time_end")) {
+                textViewTimeEnd.setError(error.getValue().get(0));
+                textViewDate.setError(error.getValue().get(0));
+            }
+            if(error.getKey().equals("latitude")) {
+                textViewDestination.setError(error.getValue().get(0));
+            }
+            if(error.getKey().equals("longitude")) {
+                textViewDestination.setError(error.getValue().get(0));
+            }
+            if(error.getKey().equals("short_place_name")) {
+                textViewDestination.setError(error.getValue().get(0));
+            }
+        }
     }
 
     private void showSuccessDialog(String message) {

@@ -18,7 +18,11 @@ public class AttendeeLog {
     @Json(name = "note_to_student")
     String noteToStudent;
     @Json(name = "note_to_teacher")
-    String noteToNextTeacher;
+    String noteToTeacher;
+    @Json(name = "rating_to_teacher")
+    Integer ratingToTeacher;
+    @Json(name = "rating_to_student")
+    Integer ratingToStudent;
     @Json(name = "points_earned")
     Integer pointsEarned;
     @Json(name = "bonus_points")
@@ -27,6 +31,14 @@ public class AttendeeLog {
     String bonusReason;
 
     public AttendeeLog() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getUniqueCode() {
@@ -53,12 +65,28 @@ public class AttendeeLog {
         this.noteToStudent = noteToStudent;
     }
 
-    public String getNoteToNextTeacher() {
-        return noteToNextTeacher;
+    public String getNoteToTeacher() {
+        return noteToTeacher;
     }
 
-    public void setNoteToNextTeacher(String noteToNextTeacher) {
-        this.noteToNextTeacher = noteToNextTeacher;
+    public void setNoteToTeacher(String noteToTeacher) {
+        this.noteToTeacher = noteToTeacher;
+    }
+
+    public Integer getRatingToTeacher() {
+        return ratingToTeacher;
+    }
+
+    public void setRatingToTeacher(Integer ratingToTeacher) {
+        this.ratingToTeacher = ratingToTeacher;
+    }
+
+    public Integer getRatingToStudent() {
+        return ratingToStudent;
+    }
+
+    public void setRatingToStudent(Integer ratingToStudent) {
+        this.ratingToStudent = ratingToStudent;
     }
 
     public Integer getPointsEarned() {
@@ -83,14 +111,5 @@ public class AttendeeLog {
 
     public void setBonusReason(String bonusReason) {
         this.bonusReason = bonusReason;
-    }
-
-    public Integer getId() {
-
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 }

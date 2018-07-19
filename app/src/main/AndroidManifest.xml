@@ -74,7 +74,9 @@
         <activity android:name=".activity.ReviewEventModificationRequestActivity" />
         <activity android:name=".activity.PresenceActivity" />
         <activity android:name=".activity.teacher.PresenceActivity" />
-        <activity android:name=".activity.EditProfileActivity"></activity>
+        <activity android:name=".activity.EditProfileActivity" />
+        <activity android:name=".activity.ListStudyHistoryActivity"></activity>
+        <activity android:name=".activity.teacher.ListTeachingHistoryActivity" />
     </application>
 
 </manifest>

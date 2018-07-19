@@ -71,6 +71,12 @@ public interface ApiService {
     Call<EventsResponse> listStudentEvent(@Query("active") Integer active);
     @GET("v1/history/events")
     Call<EventsResponse> listHistoryStudentEvent(@Query("status") String status);
+    @GET("v1/history/study/tahsin")
+    Call<EventsResponse> listStudyTahsinHistory();
+    @GET("v1/history/study/tahfidz")
+    Call<EventsResponse> listStudyTahfidzHistory();
+    @GET("v1/history/teaching")
+    Call<EventsResponse> listTeachingHistory();
     @GET("v1/list/events/2hours")
     Call<EventsResponse> listEvents2Hours();
     @POST("v1/presence")
@@ -83,6 +89,9 @@ public interface ApiService {
     @POST("v1/update/event/respond")
     @FormUrlEncoded
     Call<CreateResponse> respondUpdateEvent(@Field("event_id") Integer eventId, @Field("status") Integer status, @Field("reason") String reason);
+    @POST("v1/update/event/rate")
+    @FormUrlEncoded
+    Call<CreateResponse> rateEvent(@Field("event_id") Integer eventId, @Field("rating") Integer rating, @Field("note") String note);
 
     // Teacher Only
     @GET("v1/teacher/freetime")
