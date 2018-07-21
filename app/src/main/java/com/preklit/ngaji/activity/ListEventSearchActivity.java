@@ -1,6 +1,7 @@
 package com.preklit.ngaji.activity;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
 import com.preklit.ngaji.network.ApiService;
 import com.preklit.ngaji.network.RetrofitBuilder;
 import com.preklit.ngaji.utils.ItemAnimation;
+import com.preklit.ngaji.utils.RandomString;
 import com.preklit.ngaji.utils.Tools;
 import com.preklit.ngaji.utils.ViewAnimation;
 import com.preklit.ngaji.widget.LineItemDecoration;
@@ -34,6 +36,12 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import co.mobiwise.materialintro.MaterialIntroConfiguration;
+import co.mobiwise.materialintro.animation.MaterialIntroListener;
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.shape.ShapeType;
+import co.mobiwise.materialintro.view.MaterialIntroView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,6 +68,8 @@ public class ListEventSearchActivity extends AppCompatActivity {
     private Gson gson;
     private Intent myIntent;
     private UserManager userManager;
+    private MaterialIntroConfiguration config;
+    private int i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +99,12 @@ public class ListEventSearchActivity extends AppCompatActivity {
         }
 
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+
+        config = new MaterialIntroConfiguration();
+        config.setDelayMillis(0);
+        config.setFocusGravity(FocusGravity.CENTER);
+        config.setFocusType(Focus.NORMAL);
+        config.setFadeAnimationEnabled(true);
 
         initToolbar();
         initComponent();
@@ -231,6 +247,14 @@ public class ListEventSearchActivity extends AppCompatActivity {
 
                     if(items.size() == 0) {
                         ViewAnimation.fadeIn(noItem);
+                    } else {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                i = 0;
+                                showListGuide();
+                            }
+                        }, 2000);
                     }
                 }else {
                     tokenManager.deleteToken();
@@ -242,10 +266,125 @@ public class ListEventSearchActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TeacherFreeTimeResponse> call, Throwable t) {
-                Log.w(TAG, "onFailure: " + t.getMessage() );
+                Log.w(TAG, "onFailure: " + t.getMessage());
             }
         });
 
+    }
+
+    private void showListGuide() {
+        if(items.size() > i) {
+            View v = recyclerView.getChildAt(i);
+            switch(items.get(i).getTeacherRank()) {
+                case 1:
+                    showListBronze(v);
+                    break;
+                case 2:
+                    showListSilver(v);
+                    break;
+                case 3:
+                    showListGold(v);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void showListBronze(final View v) {
+        new MaterialIntroView.Builder(ListEventSearchActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .setInfoText("Ini adalah pengajar level perunggu. Dengan belajar pada pengajar level perunggu, maka akan menaikkan poin anda.")
+                .setShape(ShapeType.RECTANGLE)
+                .setTarget(v)
+                .performClick(false)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showPointsCostTutorial(v);
+                    }
+                })
+                .setUsageId(RandomString.generate(10)) //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showListSilver(final View v) {
+        new MaterialIntroView.Builder(ListEventSearchActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .setInfoText("Ini adalah pengajar level perak. Dengan mengirimkan permintaan janjian kepada pengajar level perak, maka akan mengurangi jumlah poin yang anda miliki.")
+                .setShape(ShapeType.RECTANGLE)
+                .setTarget(v)
+                .performClick(false)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showPointsCostTutorial(v);
+                    }
+                })
+                .setUsageId(RandomString.generate(10)) //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showListGold(final View v) {
+        new MaterialIntroView.Builder(ListEventSearchActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .setInfoText("Ini adalah pengajar level emas. Dengan mengirimkan permintaan janjian kepada pengajar level emas, maka akan mengurangi jumlah poin yang anda miliki.")
+                .setShape(ShapeType.RECTANGLE)
+                .setTarget(v)
+                .performClick(false)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showPointsCostTutorial(v);
+                    }
+                })
+                .setUsageId(RandomString.generate(10)) //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showPointsCostTutorial(View v) {
+        TextView tvPointCost = v.findViewById(R.id.points);
+        new MaterialIntroView.Builder(ListEventSearchActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .setInfoText("Ini adalah jumlah poin yang akan dikalkulasikan dengan saldo poin anda.")
+                .setShape(ShapeType.RECTANGLE)
+                .setTarget(tvPointCost)
+                .performClick(false)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        if(items.size() > i) {
+                            i++;
+                            showListGuide();
+                        } else {
+                            showSaldoPoinTutorial();
+                        }
+                    }
+                })
+                .setUsageId(RandomString.generate(10)) //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showSaldoPoinTutorial() {
+        new MaterialIntroView.Builder(ListEventSearchActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .setInfoText("Ini adalah saldo poin yang anda miliki.")
+                .setShape(ShapeType.RECTANGLE)
+                .setTarget(textViewSaldoPoin)
+                .performClick(false)
+                .setConfiguration(config)
+                .setUsageId(RandomString.generate(10)) //THIS SHOULD BE UNIQUE ID
+//                .setUsageId("intro_search_result_saldo") //THIS SHOULD BE UNIQUE ID
+                .show();
     }
 
     @Override

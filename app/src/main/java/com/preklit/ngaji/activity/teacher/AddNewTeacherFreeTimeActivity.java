@@ -38,6 +38,7 @@ import com.preklit.ngaji.activity.DetailTeacherFreeTimeActivity;
 import com.preklit.ngaji.activity.ListEventSearchActivity;
 import com.preklit.ngaji.activity.LoginActivity;
 import com.preklit.ngaji.activity.MainActivity;
+import com.preklit.ngaji.activity.TeacherSearchActivity;
 import com.preklit.ngaji.entities.ApiError;
 import com.preklit.ngaji.entities.CreateResponse;
 import com.preklit.ngaji.network.ApiService;
@@ -59,6 +60,12 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import co.mobiwise.materialintro.MaterialIntroConfiguration;
+import co.mobiwise.materialintro.animation.MaterialIntroListener;
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.shape.ShapeType;
+import co.mobiwise.materialintro.view.MaterialIntroView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -99,6 +106,7 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private Timepoint timepointEnd;
     private Timepoint timepointStart;
+    private MaterialIntroConfiguration config;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +128,26 @@ public class AddNewTeacherFreeTimeActivity extends AppCompatActivity {
         }
 
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+
+        config = new MaterialIntroConfiguration();
+        config.setDelayMillis(0);
+        config.setFocusGravity(FocusGravity.CENTER);
+        config.setFocusType(Focus.NORMAL);
+        config.setFadeAnimationEnabled(true);
+        showTextViewDestinationTutorial();
+    }
+
+    private void showTextViewDestinationTutorial() {
+        new MaterialIntroView.Builder(AddNewTeacherFreeTimeActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .setInfoText("Klik disini untuk menentukan acuan lokasi yang nantinya akan menjadi acuan dalam pencarian jadwal oleh pengguna lainnya. Anda akan dapat dicari oleh orang yang menentukan tempat ngaji dalam radius kurang dari 2,5km dari tempat acuan anda.")
+                .setShape(ShapeType.RECTANGLE)
+                .setTarget(textViewDestination)
+                .performClick(false)
+                .setConfiguration(config)
+                .setUsageId("intro_add_teacher_free_time_destination") //THIS SHOULD BE UNIQUE ID
+                .show();
     }
 
     private void initToolbar() {

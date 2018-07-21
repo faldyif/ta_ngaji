@@ -64,7 +64,9 @@ dependencies {
     compile 'com.android.support:multidex:1.0.3'                    // multidex compiling support
     implementation 'com.nex3z:notification-badge:1.0.2'             // notification badge
     compile 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3' // qr code reader
-    compile 'com.github.kenglxn.QRGen:android:2.5.0'                 // qr code generator
+    compile 'com.github.kenglxn.QRGen:android:2.5.0'                // qr code generator
+    compile 'com.github.iammert:MaterialIntroView:1.6.0'            // material intro view
+
 
     // debugging tools ----------------------------------------------------------------------------
     compile 'com.facebook.stetho:stetho:1.5.0'

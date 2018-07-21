@@ -42,6 +42,12 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import co.mobiwise.materialintro.MaterialIntroConfiguration;
+import co.mobiwise.materialintro.animation.MaterialIntroListener;
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.shape.ShapeType;
+import co.mobiwise.materialintro.view.MaterialIntroView;
 
 public class TeacherSearchActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -71,6 +77,7 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
     EditText etLocationDetails;
     @BindView(R.id.spinner_duration_study)
     Spinner spinnerDurationStudy;
+    private MaterialIntroConfiguration config;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +89,70 @@ public class TeacherSearchActivity extends AppCompatActivity implements AdapterV
         Intent intent = getIntent();
         type = intent.getStringExtra("ngaji_type");
 
+
+        config = new MaterialIntroConfiguration();
+        config.setDelayMillis(0);
+        config.setFocusGravity(FocusGravity.CENTER);
+        config.setFocusType(Focus.NORMAL);
+        config.setFadeAnimationEnabled(true);
+
         durationIntegerArray = getResources().getIntArray(R.array.duration_integer_array);
         initToolbar();
         initComponent();
+
+        showTextViewDestinationTutorial();
+    }
+
+    private void showTextViewDestinationTutorial() {
+
+        new MaterialIntroView.Builder(TeacherSearchActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .setInfoText("Klik disini untuk menentukan lokasi ngaji yang anda inginkan.")
+                .setShape(ShapeType.RECTANGLE)
+                .setTarget(textViewDestination)
+                .performClick(false)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showTextViewDestinationDescriptionTutorial();
+                    }
+                })
+                .setUsageId("intro_search_dest") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showTextViewDestinationDescriptionTutorial() {
+        new MaterialIntroView.Builder(TeacherSearchActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .setInfoText("Isi dengan tempat acuan atau deskripsi mengenai lokasi ngaji anda (opsional, namun sangat direkomendasikan).")
+                .setShape(ShapeType.RECTANGLE)
+                .setTarget(etLocationDetails)
+                .performClick(false)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showDurasiTutorial();
+                    }
+                })
+                .setUsageId("intro_search_dest_desc") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showDurasiTutorial() {
+        new MaterialIntroView.Builder(TeacherSearchActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .setInfoText("Tentukan durasi pertemuan yang anda inginkan.")
+                .setShape(ShapeType.RECTANGLE)
+                .setTarget(spinnerDurationStudy)
+                .performClick(false)
+                .setConfiguration(config)
+                .setUsageId("intro_search_duration") //THIS SHOULD BE UNIQUE ID
+                .show();
     }
 
     private void initToolbar() {

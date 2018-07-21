@@ -2,6 +2,7 @@ package com.preklit.ngaji.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,9 +12,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.preklit.ngaji.R;
 import com.preklit.ngaji.fragment.ListEventStudentFragment;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import co.mobiwise.materialintro.MaterialIntroConfiguration;
+import co.mobiwise.materialintro.animation.MaterialIntroListener;
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.shape.ShapeType;
+import co.mobiwise.materialintro.view.MaterialIntroView;
 
 public class ListEventForStudentActivity extends AppCompatActivity {
 
@@ -32,6 +44,10 @@ public class ListEventForStudentActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
     private Context ctx;
+    private MaterialIntroConfiguration config;
+
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,19 +63,85 @@ public class ListEventForStudentActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), ctx);
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOffscreenPageLimit(3);         /* limit is a fixed integer*/
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
+        ButterKnife.bind(this);
+
+        config = new MaterialIntroConfiguration();
+        config.setDelayMillis(0);
+        config.setFocusGravity(FocusGravity.CENTER);
+        config.setFocusType(Focus.NORMAL);
+        config.setFadeAnimationEnabled(true);
+
+        showIntroPending();
+    }
+
+    private void showIntroPending() {
+        View tab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(0);
+        new MaterialIntroView.Builder(ListEventForStudentActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText("Daftar pengajuan jadwal anda yang belum dikonfirmasi akan masuk ke sini.")
+                .setShape(ShapeType.RECTANGLE)
+                .setTarget(tab)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showIntroDiterima();
+                    }
+                })
+                .setUsageId("intro_jadwal_pending") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showIntroDiterima() {
+        View tab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(1);
+        new MaterialIntroView.Builder(ListEventForStudentActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText("Daftar pengajuan jadwal anda yang sudah dikonfirmasi akan masuk ke sini.")
+                .setShape(ShapeType.RECTANGLE)
+                .setTarget(tab)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showIntroDitolak();
+                    }
+                })
+                .setUsageId("intro_jadwal_accepted") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showIntroDitolak() {
+        View tab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(2);
+        new MaterialIntroView.Builder(ListEventForStudentActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText("Daftar pengajuan jadwal anda yang ditolak oleh pengajar akan masuk ke sini.")
+                .setShape(ShapeType.RECTANGLE)
+                .setTarget(tab)
+                .setConfiguration(config)
+                .setUsageId("intro_jadwal_rejected") //THIS SHOULD BE UNIQUE ID
+                .show();
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Jadwal NgajiKu");

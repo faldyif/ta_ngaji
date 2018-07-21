@@ -50,6 +50,7 @@ import com.preklit.ngaji.entities.TeacherFreeTimeResponse;
 import com.preklit.ngaji.network.ApiService;
 import com.preklit.ngaji.network.RetrofitBuilder;
 import com.preklit.ngaji.network.firebase.FirebaseInstanceIDService;
+import com.preklit.ngaji.utils.RandomString;
 import com.preklit.ngaji.utils.Tools;
 import com.preklit.ngaji.utils.ViewAnimation;
 
@@ -62,6 +63,12 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import co.mobiwise.materialintro.MaterialIntroConfiguration;
+import co.mobiwise.materialintro.animation.MaterialIntroListener;
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.shape.ShapeType;
+import co.mobiwise.materialintro.view.MaterialIntroView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -82,6 +89,29 @@ public class MainActivity extends AppCompatActivity {
     TextView textViewPhoneNumber;
     @BindView(R.id.photo_round)
     ImageView imageViewPhotoRound;
+
+    @BindView(R.id.menu_guru_jadwal)
+    LinearLayout menuGuruJadwal;
+    @BindView(R.id.menu_tahsin)
+    LinearLayout menuTahsin;
+    @BindView(R.id.menu_tahfidz)
+    LinearLayout menuTahfidz;
+    @BindView(R.id.menu_santri_pengajuan)
+    LinearLayout menuSantriPengajuan;
+    @BindView(R.id.menu_santri_jadwal)
+    LinearLayout menuSantriJadwal;
+    @BindView(R.id.menu_santri_riwayat)
+    LinearLayout menuSantriRiwayat;
+    @BindView(R.id.menu_guru_upcoming)
+    LinearLayout menuGuruUpcoming;
+    @BindView(R.id.menu_guru_pengajuan)
+    LinearLayout menuGuruPengajuan;
+    @BindView(R.id.menu_guru_riwayat)
+    LinearLayout menuGuruRiwayat;
+    @BindView(R.id.btn_edit_profile)
+    Button buttonEditProfile;
+
+
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private TokenManager tokenManager;
@@ -93,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Event> arrEvent;
     Context ctx;
+    private MaterialIntroConfiguration config;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +156,212 @@ public class MainActivity extends AppCompatActivity {
                 getCountUnconfirmed();
 
         }
+
+        config = new MaterialIntroConfiguration();
+        config.setDelayMillis(0);
+        config.setFocusGravity(FocusGravity.CENTER);
+        config.setFocusType(Focus.NORMAL);
+        config.setFadeAnimationEnabled(true);
+
         getListEvents2Hours();
+        showNgajiPointsTutorial();
+    }
+
+    private void showTahsinTutorial() {
+
+        new MaterialIntroView.Builder(MainActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .setInfoText("Untuk melakukan pencarian ustad pengajar tahsin (perbaikan bacaan), klik pada tombol ini.")
+                .setShape(ShapeType.CIRCLE)
+                .setTarget(menuTahsin)
+                .performClick(false)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showTahfidzTutorial();
+                    }
+                })
+                .setUsageId("intro_dashboard_tahsin") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showTahfidzTutorial() {
+        new MaterialIntroView.Builder(MainActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText("Untuk melakukan pencarian ustad pengajar tahfidz (setoran hafalan Al-Qur'an), klik pada tombol ini.")
+                .setShape(ShapeType.CIRCLE)
+                .setTarget(menuTahfidz)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showSantriPengajuanTutorial();
+                    }
+                })
+                .setUsageId("intro_dashboard_tahfidz") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showSantriPengajuanTutorial() {
+        new MaterialIntroView.Builder(MainActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText("Untuk melihat pengajuan jadwal yang sebelumnya telah anda ajukan kepada pengajar, klik pada tombol ini.")
+                .setShape(ShapeType.CIRCLE)
+                .setTarget(menuSantriPengajuan)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showSantriJadwalTutorial();
+                    }
+                })
+                .setUsageId(RandomString.generate(10))
+                .setUsageId("intro_dashboard_santri_pengajuan") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showSantriJadwalTutorial() {
+        new MaterialIntroView.Builder(MainActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText("Untuk melihat jadwal akan datang yang sudah diterima oleh pengajar, klik pada tombol ini.")
+                .setShape(ShapeType.CIRCLE)
+                .setTarget(menuSantriJadwal)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showSantriRiwayatTutorial();
+                    }
+                })
+                .setUsageId("intro_dashboard_santri_jadwal") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showSantriRiwayatTutorial() {
+        new MaterialIntroView.Builder(MainActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText("Untuk melihat riwayat pembelajaran dan penilaian pengajar terhadap anda, klik pada tombol ini.")
+                .setShape(ShapeType.CIRCLE)
+                .setTarget(menuSantriRiwayat)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        if(userManager.getUserDetail().getRole().equals("teacher"))
+                            showGuruLuangTutorial();
+                    }
+                })
+                .setUsageId("intro_dashboard_santri_riwayat") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showGuruLuangTutorial() {
+        new MaterialIntroView.Builder(MainActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText("Untuk melihat serta menambahkan waktu luang, klik pada tombol ini. Anda perlu menambahkan waktu luang sehingga anda sudah bisa muncul di pencarian pengguna lain.")
+                .setShape(ShapeType.CIRCLE)
+                .setTarget(menuGuruJadwal)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showGuruPengajuanTutorial();
+                    }
+                })
+                .setUsageId("intro_dashboard_guru_luang") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showGuruPengajuanTutorial() {
+        new MaterialIntroView.Builder(MainActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText("Untuk meninjau serta merespon pengajuan jadwal dari pengguna lain, klik pada tombol ini.")
+                .setShape(ShapeType.CIRCLE)
+                .setTarget(menuGuruPengajuan)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showGuruJadwalTutorial();
+                    }
+                })
+                .setUsageId("intro_dashboard_guru_pengajuan") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showGuruJadwalTutorial() {
+        new MaterialIntroView.Builder(MainActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText("Untuk melihat jadwal mengajar akan datang yang telah disetujui, klik pada tombol ini.")
+                .setShape(ShapeType.CIRCLE)
+                .setTarget(menuGuruUpcoming)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showGuruRiwayatTutorial();
+                    }
+                })
+                .setUsageId("intro_dashboard_guru_jadwal") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showGuruRiwayatTutorial() {
+        new MaterialIntroView.Builder(MainActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText("Untuk melihat riwayat mengajar dan penilaian siswa atas pengajaran anda, klik pada tombol ini.")
+                .setShape(ShapeType.CIRCLE)
+                .setTarget(menuGuruRiwayat)
+                .setConfiguration(config)
+                .setUsageId(RandomString.generate(10))
+                .setUsageId("intro_dashboard_guru_riwayat") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
+    private void showNgajiPointsTutorial() {
+        new MaterialIntroView.Builder(MainActivity.this)
+                .enableDotAnimation(true)
+                .enableIcon(false)
+                .enableFadeAnimation(true)
+                .performClick(false)
+                .setInfoText("Ini adalah saldo NgajiPoints anda. NgajiPoints adalah semacam loyalty reward yang dapat digunakan untuk bertemu dengan pengajar dengan level yang lebih tinggi. Semakin sering anda mengaji, semakin sering anda akan berkesempatan bertemu dengan ustad yang lebih berkompeten.")
+                .setShape(ShapeType.RECTANGLE)
+                .setTarget(textViewNgajiPoints)
+                .setConfiguration(config)
+                .setListener(new MaterialIntroListener() {
+                    @Override
+                    public void onUserClicked(String s) {
+                        showTahsinTutorial();
+                    }
+                })
+                .setUsageId("intro_dashboard_ngajipoints") //THIS SHOULD BE UNIQUE ID
+                .show();
     }
 
     private void initUserText() {
@@ -160,8 +396,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
-        } else if (item.getItemId() == R.id.action_help) {
-            Intent intent = new Intent();
         } else if (item.getItemId() == R.id.action_logout) {
             logOut();
         } else {
